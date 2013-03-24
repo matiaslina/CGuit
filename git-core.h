@@ -6,11 +6,13 @@
 
 void git_core_load_repository (const gchar *path);
 
-git_repository* git_current_repository;
+git_repository* git_core_current_repository;
 
 typedef struct {
     const git_signature *author, *committer;
     const char *message;
     time_t ctime;
-    unsigned int parents, p;
+    unsigned int parent_count;
 } commit_info;
+
+commit_info *git_core_commit_info_new (git_commit *commit);
