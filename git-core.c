@@ -7,7 +7,6 @@
 #include "git-core.h"
 
 extern git_repository* git_core_current_repository;
-git_repository* git_core_current_repository = NULL;
 
 static void get_hex_oid (gchar **uid, gchar *branch_file)
 {
@@ -44,6 +43,44 @@ commit_info *git_core_commit_info_new (git_commit *commit)
 	return info;
 }	
 
+gchar *git_core_create_commit ( const gchar *author_name,
+								const gchar *author_email,
+								const gchar *committer_name,
+								const gchar *committer_email,
+								gchar *message,
+								gchar *encoding,
+								const git_tree *tree,
+								const git_commit *parent,
+								int parent_count)
+{
+	static char out[41];
+	git_oid commit_id;
+	git_signature *author, *committer;
+
+	git_signature_now ((git_signature **) &author,
+					   author_name, author_email);
+	git_signature_now ((git_signature **) &committer,
+					   committer_name,
+					   committer_email);
+
+	git_commit_create_v( &commit_id,                  // out id
+						 git_core_current_repository, // Repository
+						 NULL,                        // (update_ref) do not update the ref
+						 author,                      // Author of the commit
+						 committer,                   // Committer 
+						 encoding,                    // Encoding
+						 message,                     // Message
+						 tree,                        // Parent tree
+						 1,                           // parent count
+						 parent);                     // List the parents, we can have a lot of here.
+
+	/* Free all the signatures */
+	git_signature_free (author);
+	git_signature_free (committer);
+	git_oid_fmt (out, &commit_id);
+
+	return out;
+}
 void git_core_load_repository (const gchar *path)
 {
     g_return_if_fail (path != NULL);
