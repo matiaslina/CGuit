@@ -10,6 +10,7 @@ extern git_repository* git_core_current_repository;
 
 static void get_hex_oid (gchar **uid, gchar *branch_file)
 {
+	g_return_if_fail (branch_file != NULL);
     gboolean result;
     GError *err = NULL;
     
@@ -81,6 +82,7 @@ gchar *git_core_create_commit ( const gchar *author_name,
 
 	return out;
 }
+
 void git_core_load_repository (const gchar *path)
 {
     g_return_if_fail (path != NULL);
