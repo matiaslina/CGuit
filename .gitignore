@@ -1,0 +1,9 @@
+*.log
+*.status
+*.swp
+
+config.h
+
+guit
+
+*.cache
