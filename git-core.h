@@ -15,6 +15,12 @@ typedef struct {
     unsigned int parent_count;
 } commit_info;
 
+typedef struct {
+    char *parent_dir;
+    char *name;
+    gboolean is_dir;
+} git_core_file_info;
+
 /**
  * git_core_commit_info_new
  * Create a struct with all the data of one commit.
@@ -44,3 +50,19 @@ gchar *git_core_create_commit ( const gchar *author_name,
                                 const git_tree *tree,
                                 const git_commit *parent,
                                 int parent_count);
+/**
+ * git_core_all_commits
+ *
+ * Get a list with all commits on a branch.
+ */
+GList *git_core_all_commits (gchar *branch);
+
+/**
+ * git_core_nth_tree
+ *
+ * get the nth tree from the branch passed bt parameter.
+ * NOTE: NOT IMPLEMENTED YET.
+ */
+void git_core_nth_tree (git_tree *tree,
+                        unsigned int depth,
+                        const char *branch);

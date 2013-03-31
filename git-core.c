@@ -7,13 +7,17 @@
 #include "git-core.h"
 
 extern git_repository* git_core_current_repository;
-
+/**
+ * Get the hex object id from the branch passed by parameter
+ */
 static void get_hex_oid (gchar **uid, gchar *branch_file)
 {
+    /* This will get an error if the branch isn't setted */
     g_return_if_fail (branch_file != NULL);
+
     gboolean result;
     GError *err = NULL;
-    
+
     result = g_file_get_contents (branch_file,
                                   uid,
                                   NULL,
@@ -83,6 +87,48 @@ gchar *git_core_create_commit ( const gchar *author_name,
     return out;
 }
 
+GList *git_core_all_commits (gchar *branch)
+{
+    static GList *list = NULL;
+
+    gchar *hex_oid;
+    git_oid oid;
+    git_commit *commit;
+    int error = 0;
+
+    get_hex_oid (&hex_oid, branch);
+
+    git_oid_fromstr (&oid, hex_oid);
+
+    git_commit_lookup ( &commit,
+                        git_core_current_repository,
+                        &oid);
+
+    while (commit != NULL && error == 0)
+    {
+        commit_info *info;
+        info = git_core_commit_info_new (commit);
+
+        list = g_list_append (list, info);
+        /* Get the next commit */
+        error = git_commit_parent (&commit,
+                                   commit,
+                                  0);
+    }
+
+    git_commit_free (commit);
+
+    list = g_list_first (list);
+
+    return list;
+}
+
+void
+git_core_nth_tree (git_tree *tree,
+                   unsigned int depth,
+                   const char *branch)
+{}
+
 void git_core_load_repository (const gchar *path)
 {
     g_return_if_fail (path != NULL);
@@ -111,6 +157,20 @@ int main (int argc, char **argv)
     printf("Author: %s (%s)\n", info->author->name, info->author->email);
     
     git_commit_free (commit);
+
+    GList *all_commit_list = git_core_all_commits (path_to_branch_file);
+    GList *it;
+
+    for ( it = all_commit_list; it != NULL; it = it->next)
+    {
+        info = (commit_info *) it->data;
+
+        printf("Message-> %s\n", info->message);
+    }
+
+    //printf("Author: %s\n", my_info->author->name);
+
+    g_list_free(all_commit_list);
     
     
     git_repository_free (git_core_current_repository);
