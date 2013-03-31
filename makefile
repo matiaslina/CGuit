@@ -1,8 +1,10 @@
-FLAGS=`pkg-config --cflags --libs glib-2.0 libgit2`
+FLAGS=`pkg-config --cflags --libs \
+	   glib-2.0 \
+	   libgit2`
 WARN = -Wall
 
 all:
-	gcc $(FLAGS) git-core.c -o test 
+	gcc git-core.c -o test $(FLAGS) 
 	
 with-warn:
-	gcc $(WARN) $(FLAGS) git-core.c -o test
+	gcc $(WARN) git-core.c -o test $(FLAGS) 
