@@ -36,7 +36,6 @@ commit_info *git_core_commit_info_new (git_commit *commit)
     commit_info *info;
     if((info = malloc(sizeof *info)) != NULL)
     {
-        info->author = git_commit_author (commit);
         info->message = git_commit_message (commit);
         info->author = git_commit_author (commit);
         info->committer = git_commit_committer (commit);
@@ -47,6 +46,15 @@ commit_info *git_core_commit_info_new (git_commit *commit)
 
     return info;
 }    
+
+void git_core_commit_info_free(commit_info *info)
+{
+   git_signature_free((git_signature *) info->author);
+   git_signature_free((git_signature *) info->committer);
+   
+   free(info);
+   info = NULL;
+}
 
 gchar *git_core_create_commit ( const gchar *author_name,
                                 const gchar *author_email,
@@ -169,7 +177,9 @@ int main (int argc, char **argv)
     }
 
     //printf("Author: %s\n", my_info->author->name);
-
+    
+    /* Freeing the list */
+    g_list_free_full (all_commit_list, (GDestroyNotify) git_core_commit_info_free);
     g_list_free(all_commit_list);
     
     
