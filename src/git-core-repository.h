@@ -3,13 +3,11 @@
 
 #include <git2.h>
 
-struct _GCRepository {
+typedef struct {
     git_repository  *current;
     char            *branch;
     char            *path;
-}
-
-typedef _GCRepository GCRepository;
+} GCRepository;
 
 GCRepository *gc_repository;
 

@@ -2,14 +2,14 @@
 #include <glib.h>
 #include <glib/gstdio.h>
 
+#include "git-core-repository.h"
 
 extern GCRepository *gc_repository;
-gc_repository = NULL;
 
 void gc_repository_init (char *path,
                          char *branch)
 {
-   if (gc_repository = malloc(sizeof (GCRepository)) != NULL)
+   if ((gc_repository = malloc(sizeof (*gc_repository))) != NULL)
    {
        git_repository_open (&(gc_repository->current), path);
        gc_repository->branch = branch;
@@ -22,6 +22,6 @@ void gc_repository_init (char *path,
 void gc_repository_free (void)
 {
     git_repository_free (gc_repository->current);
-    free (gc_repository);
+    g_free (gc_repository);
     gc_repository = NULL;
 }

@@ -1,10 +1,13 @@
+FILES=src/git-core.c \
+      src/git-core-repository.c \
+      src/tests.c
 FLAGS=`pkg-config --cflags --libs \
 	   glib-2.0 \
 	   libgit2`
 WARN = -Wall
 
 all:
-	gcc git-core.c -o test $(FLAGS) 
+	gcc $(FILES) -o tests $(FLAGS) 
 	
 with-warn:
-	gcc $(WARN) git-core.c -o test $(FLAGS) 
+	gcc $(WARN) $(FILES) -o tests $(FLAGS) 
