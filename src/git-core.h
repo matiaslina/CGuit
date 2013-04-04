@@ -7,9 +7,9 @@
 #include <glib.h>
 #include <glib/gstdio.h>
 
-void git_core_load_repository (const gchar *path);
+void gc_load_repository (const gchar *path);
 
-git_repository* git_core_current_repository;
+git_repository* gc_current_repository;
 
 typedef struct {
     const git_signature     *author;
@@ -23,10 +23,12 @@ typedef struct {
     char *parent_dir;
     char *name;
     gboolean is_dir;
-} git_core_file_info;
+} gc_file_info;
+
+void hex_oid_from_file (char **uid);
 
 /**
- * git_core_commit_info_new
+ * gc_commit_info_new
  * Create a struct with all the data of one commit.
  * it includes:
  *        * author
@@ -38,20 +40,20 @@ typedef struct {
  * @return commit_info pointer
  * NOTE: Don't know if it's necessary to free the commit
  */
-commit_info *git_core_commit_info_new (git_commit *commit);
+commit_info *gc_commit_info_new (git_commit *commit);
 
 /**
- * git_core_commit_info_free
+ * gc_commit_info_free
  * Frees a commit_info struct
  */
-void git_core_commit_info_free(commit_info *info);
+void gc_commit_info_free(commit_info *info);
 
 /**
- * git_core_create_commit
+ * gc_create_commit
  *
  * Do a commit on the actual repository.
  */
-gchar *git_core_create_commit ( const gchar *author_name,
+gchar *gc_create_commit ( const gchar *author_name,
                                 const gchar *author_email,
                                 const gchar *committer_name,
                                 const gchar *committer_email,
@@ -61,19 +63,19 @@ gchar *git_core_create_commit ( const gchar *author_name,
                                 const git_commit *parent,
                                 int parent_count);
 /**
- * git_core_all_commits
+ * gc_all_commits
  *
  * Get a list with all commits on a branch.
  */
-GList *git_core_all_commits (gchar *branch);
+GList *gc_all_commits ();
 
 /**
- * git_core_nth_tree
+ * gc_nth_tree
  *
  * get the nth tree from the branch passed bt parameter.
  * NOTE: NOT IMPLEMENTED YET.
  */
-void git_core_nth_tree (git_tree *tree,
+void gc_nth_tree (git_tree *tree,
                         unsigned int depth,
                         const char *branch);
 

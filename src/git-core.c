@@ -4,19 +4,24 @@
 #include <glib.h>
 #include <glib/gstdio.h>
 
-#include "git-core.h"
+#include <assert.h>
 
-extern git_repository* git_core_current_repository;
+#include "git-core.h"
+#include "git-core-repository.h"
+
 /**
  * Get the hex object id from the branch passed by parameter
  */
-static void get_hex_oid (gchar **uid, gchar *branch_file)
+void hex_oid_from_file (char **uid)
 {
-    /* This will get an error if the branch isn't setted */
-    g_return_if_fail (branch_file != NULL);
-
+    
     gboolean result;
     GError *err = NULL;
+    char branch_file[64];
+    branch_file[63] = '\0';
+    
+    sprintf(branch_file, "%s/.git/refs/heads/%s", gc_repository->path, 
+                                                  gc_repository->branch);
 
     result = g_file_get_contents (branch_file,
                                   uid,
@@ -27,11 +32,10 @@ static void get_hex_oid (gchar **uid, gchar *branch_file)
     {
         g_printerr("Cannot take the HEAD uid form file %s\n", branch_file);
         g_error_free (err);
-    }
-    
+    }   
 }
 
-commit_info *git_core_commit_info_new (git_commit *commit)
+commit_info *gc_commit_info_new (git_commit *commit)
 {
     commit_info *info;
     if((info = malloc(sizeof *info)) != NULL)
@@ -47,7 +51,7 @@ commit_info *git_core_commit_info_new (git_commit *commit)
     return info;
 }    
 
-void git_core_commit_info_free(commit_info *info)
+void gc_commit_info_free(commit_info *info)
 {
    git_signature_free((git_signature *) info->author);
    git_signature_free((git_signature *) info->committer);
@@ -56,7 +60,7 @@ void git_core_commit_info_free(commit_info *info)
    info = NULL;
 }
 
-gchar *git_core_create_commit ( const gchar *author_name,
+gchar *gc_create_commit ( const gchar *author_name,
                                 const gchar *author_email,
                                 const gchar *committer_name,
                                 const gchar *committer_email,
@@ -77,7 +81,7 @@ gchar *git_core_create_commit ( const gchar *author_name,
                        committer_email);
 
     git_commit_create_v( &commit_id,                  // out id
-                         git_core_current_repository, // Repository
+                         gc_current_repository, // Repository
                          NULL,                        // (update_ref) do not update the ref
                          author,                      // Author of the commit
                          committer,                   // Committer 
@@ -95,7 +99,7 @@ gchar *git_core_create_commit ( const gchar *author_name,
     return out;
 }
 
-GList *git_core_all_commits (gchar *branch)
+GList *gc_all_commits ()
 {
     static GList *list = NULL;
 
@@ -104,18 +108,18 @@ GList *git_core_all_commits (gchar *branch)
     git_commit *commit;
     int error = 0;
 
-    get_hex_oid (&hex_oid, branch);
+    hex_oid_from_file (&hex_oid);
 
     git_oid_fromstr (&oid, hex_oid);
-
+        
     git_commit_lookup ( &commit,
-                        git_core_current_repository,
+                        gc_repository->current,
                         &oid);
 
     while (commit != NULL && error == 0)
     {
         commit_info *info;
-        info = git_core_commit_info_new (commit);
+        info = gc_commit_info_new (commit);
 
         list = g_list_append (list, info);
         /* Get the next commit */
@@ -132,57 +136,9 @@ GList *git_core_all_commits (gchar *branch)
 }
 
 void
-git_core_nth_tree (git_tree *tree,
+gc_nth_tree (git_tree *tree,
                    unsigned int depth,
                    const char *branch)
 {}
 
-void git_core_load_repository (const gchar *path)
-{
-    g_return_if_fail (path != NULL);
-    git_repository_open (&git_core_current_repository, path);
-}
 
-int main (int argc, char **argv)
-{
-    gchar *uid;
-    const char *repo_path = ".";
-    gchar *path_to_branch_file = "./.git/refs/heads/master";
-    git_core_load_repository (repo_path);
-    
-    
-    get_hex_oid (&uid, path_to_branch_file);
-    
-    git_oid oid;
-    git_oid_fromstr (&oid, uid);
-    g_free(uid);
-    
-    git_commit *commit;
-    git_commit_lookup (&commit, git_core_current_repository, &oid);
-    
-    commit_info *info = git_core_commit_info_new (commit);
-    
-    printf("Author: %s (%s)\n", info->author->name, info->author->email);
-    
-    git_commit_free (commit);
-
-    GList *all_commit_list = git_core_all_commits (path_to_branch_file);
-    GList *it;
-
-    for ( it = all_commit_list; it != NULL; it = it->next)
-    {
-        info = (commit_info *) it->data;
-
-        printf("Message-> %s\n", info->message);
-    }
-
-    //printf("Author: %s\n", my_info->author->name);
-    
-    /* Freeing the list */
-    g_list_free_full (all_commit_list, (GDestroyNotify) git_core_commit_info_free);
-    g_list_free(all_commit_list);
-    
-    
-    git_repository_free (git_core_current_repository);
-    return 0;
-}
