@@ -39,10 +39,12 @@ int main (int argc, char **argv)
         printf("Message-> %s\n", info->message);
     }
 
+
     //printf("Author: %s\n", my_info->author->name);
     
     /* Freeing the list */
-    g_list_free_full (all_commit_list, (GDestroyNotify) gc_commit_info_free);
+    //g_list_free_full (all_commit_list, (GDestroyNotify) gc_commit_info_free);
+    
     g_list_free(all_commit_list);
     
     gc_repository_free();
