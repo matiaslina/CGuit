@@ -38,7 +38,7 @@ void hex_oid_from_file (char **uid)
 commit_info *gc_commit_info_new (git_commit *commit)
 {
     commit_info *info;
-    if((info = malloc(sizeof *info)) != NULL)
+    if((info = calloc(5,sizeof *info)) != NULL)
     {
         info->message = git_commit_message (commit);
         info->author = git_commit_author (commit);
@@ -53,11 +53,12 @@ commit_info *gc_commit_info_new (git_commit *commit)
 
 void gc_commit_info_free(commit_info *info)
 {
-   git_signature_free((git_signature *) info->author);
-   git_signature_free((git_signature *) info->committer);
+    git_signature_free((git_signature *) info->author);
+    
+    git_signature_free((git_signature *) info->committer);
    
-   free(info);
-   info = NULL;
+    free(info);
+    info = NULL;
 }
 
 gchar *gc_create_commit ( const gchar *author_name,
