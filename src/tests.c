@@ -25,6 +25,8 @@ int main (int argc, char **argv)
     
     printf("Author: %s (%s)\n", info->author->name, info->author->email);
     
+    gc_commit_info_free(info);
+    
     git_commit_free (commit);
 
     GList *all_commit_list = gc_all_commits ();

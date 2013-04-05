@@ -9,9 +9,9 @@ extern GCRepository *gc_repository;
 void gc_repository_init (char *path,
                          char *branch)
 {
-   if ((gc_repository = malloc(sizeof (*gc_repository))) != NULL)
+   if ((gc_repository = calloc(3, sizeof (*gc_repository))) != NULL)
    {
-       git_repository_open (&(gc_repository->current), path);
+       git_repository_open (&gc_repository->current, path);
        gc_repository->branch = branch;
        gc_repository->path = path;
    }
