@@ -4,10 +4,12 @@ FILES=src/git-core.c \
 FLAGS=`pkg-config --cflags --libs \
 	   glib-2.0 \
 	   libgit2`
-WARN = -Wall
+WARN = -Wall -Wextra
+
+CC=clang
 
 all:
-	gcc $(FILES) -o tests $(FLAGS) 
+	$(CC) $(FILES) -o tests $(FLAGS) 
 	
 with-warn:
-	gcc $(WARN) $(FILES) -o tests $(FLAGS) 
+	$(CC) $(WARN) $(FILES) -o tests $(FLAGS) 
