@@ -1,7 +1,7 @@
 #include <git2.h>
 
-#include "git-core.h"
-#include "git-core-repository.h"
+#include "git-core/git-core.h"
+#include "git-core/repository.h"
 
 int main (int argc, char **argv)
 {

@@ -1,5 +1,5 @@
-FILES=src/git-core.c \
-      src/git-core-repository.c \
+FILES=src/git-core/git-core.c \
+      src/git-core/repository.c \
       src/tests.c
 FLAGS=`pkg-config --cflags --libs \
 	   glib-2.0 \

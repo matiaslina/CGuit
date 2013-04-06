@@ -2,7 +2,7 @@
 #include <glib.h>
 #include <glib/gstdio.h>
 
-#include "git-core-repository.h"
+#include "repository.h"
 
 extern GCRepository *gc_repository;
 

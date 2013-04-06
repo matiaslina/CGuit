@@ -7,7 +7,7 @@
 #include <assert.h>
 
 #include "git-core.h"
-#include "git-core-repository.h"
+#include "repository.h"
 
 /**
  * Get the hex object id from the branch passed by parameter
