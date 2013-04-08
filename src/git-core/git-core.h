@@ -12,6 +12,7 @@ void gc_load_repository (const gchar *path);
 git_repository* gc_current_repository;
 
 typedef struct {
+    char                    *oid;
     const git_signature     *author;
     const git_signature     *committer;
     const char              *message;

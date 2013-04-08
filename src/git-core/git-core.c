@@ -40,6 +40,12 @@ commit_info *gc_commit_info_new (git_commit *commit)
     commit_info *info;
     if((info = calloc(5,sizeof *info)) != NULL)
     {
+        /* Initialize the oid */
+        info->oid = malloc ( 41 * sizeof (char));
+        info->oid[40] = '\0';
+        const git_oid *tmp_oid = git_commit_id (commit);
+        git_oid_fmt (info->oid, tmp_oid);
+        
         info->message = git_commit_message (commit);
         info->author = git_commit_author (commit);
         info->committer = git_commit_committer (commit);
@@ -53,6 +59,7 @@ commit_info *gc_commit_info_new (git_commit *commit)
 
 void gc_commit_info_free(commit_info *info)
 {
+    g_free (info->oid);
     git_signature_free((git_signature *) info->author);
     
     git_signature_free((git_signature *) info->committer);
@@ -62,14 +69,14 @@ void gc_commit_info_free(commit_info *info)
 }
 
 gchar *gc_create_commit ( const gchar *author_name,
-                                const gchar *author_email,
-                                const gchar *committer_name,
-                                const gchar *committer_email,
-                                gchar *message,
-                                gchar *encoding,
-                                const git_tree *tree,
-                                const git_commit *parent,
-                                int parent_count)
+                          const gchar *author_email,
+                          const gchar *committer_name,
+                          const gchar *committer_email,
+                          gchar *message,
+                          gchar *encoding,
+                          const git_tree *tree,
+                          const git_commit *parent,
+                          int parent_count)
 {
     static char out[41];
     git_oid commit_id;

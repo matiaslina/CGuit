@@ -1,98 +1,58 @@
-#include <git2.h>
+#include <gtk/gtk.h>
 
-#include "git-core/git-core.h"
 #include "git-core/repository.h"
+#include "./gui/guit-commit-list-store.h"
 
 int main (int argc, char **argv)
 {
-    gchar *uid;
-    gchar *repo_path = ".";
-    gchar *branch = "master";
+    gtk_init (NULL, NULL);
+    gc_repository_init (".", "master");
     
-    gc_repository_init(repo_path, branch);
+    GtkWidget *window;
+    GtkWidget *vbox;
+    GtkWidget *label;
     
-    hex_oid_from_file (&uid);
+    GtkWidget *treeview;
+    GtkWidget *scrolled;
+    GtkTreeModel *model;
     
-    git_oid oid;
-    git_oid_fromstr (&oid, uid);
+    window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
     
-    g_free(uid);
+    gtk_window_set_title (GTK_WINDOW (window), "CGuit");
+    g_signal_connect (window,"destroy", G_CALLBACK (gtk_main_quit), NULL);
+    gtk_container_set_border_width (GTK_CONTAINER (window), 9);
     
-    git_commit *commit;
-    git_commit_lookup (&commit, gc_repository->current, &oid);
+    vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 8);
+    gtk_container_add (GTK_CONTAINER (window), vbox);
     
-    commit_info *info = gc_commit_info_new (commit);
+    label = gtk_label_new ("Commit list store test");
+    gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 0);
     
-    printf("Author: %s (%s)\n", info->author->name, info->author->email);
     
-    gc_commit_info_free(info);
+    scrolled = gtk_scrolled_window_new (NULL, NULL);
+    gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (scrolled),
+                                         GTK_SHADOW_ETCHED_IN);
+    gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolled),
+                                    GTK_POLICY_AUTOMATIC,
+                                    GTK_POLICY_AUTOMATIC);
+    gtk_box_pack_start (GTK_BOX (vbox), scrolled, TRUE, TRUE, 0);
     
-    git_commit_free (commit);
-
-    GList *all_commit_list = gc_all_commits ();
-    GList *it;
-
-    for ( it = all_commit_list; it != NULL; it = it->next)
-    {
-        info = (commit_info *) it->data;
-
-        printf("Message-> %s\n", info->message);
-    }
-
-
-    //printf("Author: %s\n", my_info->author->name);
+    model = guit_commit_list_store_new ();
     
-    /* Freeing the list */
-    //g_list_free_full (all_commit_list, (GDestroyNotify) gc_commit_info_free);
+    treeview = gtk_tree_view_new_with_model (model);
+    gtk_tree_view_set_rules_hint (GTK_TREE_VIEW (treeview), TRUE);
     
-    g_list_free(all_commit_list);
+    g_object_unref (model);
     
+    gtk_container_add (GTK_CONTAINER (scrolled), treeview);
+    
+    guit_commit_list_store_add_columns (GTK_TREE_VIEW (treeview));
+    
+    gtk_window_set_default_size (GTK_WINDOW (window), 280, 250);
+    
+    gtk_widget_show_all (window);
+    
+    gtk_main ();
     gc_repository_free();
     return 0;
 }
-
-/*
-int main (int argc, char **argv)
-{
-    gchar *uid;
-    const char *repo_path = ".";
-    gchar *path_to_branch_file = "./.git/refs/heads/master";
-    gc_load_repository (repo_path);
-    
-    
-    get_hex_oid (&uid, path_to_branch_file);
-    
-    git_oid oid;
-    git_oid_fromstr (&oid, uid);
-    g_free(uid);
-    
-    git_commit *commit;
-    git_commit_lookup (&commit, gc_current_repository, &oid);
-    
-    commit_info *info = gc_commit_info_new (commit);
-    
-    printf("Author: %s (%s)\n", info->author->name, info->author->email);
-    
-    git_commit_free (commit);
-
-    GList *all_commit_list = gc_all_commits (path_to_branch_file);
-    GList *it;
-
-    for ( it = all_commit_list; it != NULL; it = it->next)
-    {
-        info = (commit_info *) it->data;
-
-        printf("Message-> %s\n", info->message);
-    }
-
-    //printf("Author: %s\n", my_info->author->name);
-    
-    Freeing the list 
-    g_list_free_full (all_commit_list, (GDestroyNotify) gc_commit_info_free);
-    g_list_free(all_commit_list);
-    
-    
-    git_repository_free (gc_current_repository);
-    return 0;
-}
-*/
