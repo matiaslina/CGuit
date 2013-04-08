@@ -54,15 +54,15 @@ void gc_commit_info_free(commit_info *info);
  *
  * Do a commit on the actual repository.
  */
-gchar *gc_create_commit ( const gchar *author_name,
-                                const gchar *author_email,
-                                const gchar *committer_name,
-                                const gchar *committer_email,
-                                gchar *message,
-                                gchar *encoding,
-                                const git_tree *tree,
-                                const git_commit *parent,
-                                int parent_count);
+gchar *gc_create_commit (const gchar *author_name,
+                         const gchar *author_email,
+                         const gchar *committer_name,
+                         const gchar *committer_email,
+                         gchar *message,
+                         gchar *encoding,
+                         const git_tree *tree,
+                         const git_commit *parent,
+                         int parent_count);
 /**
  * gc_all_commits
  *

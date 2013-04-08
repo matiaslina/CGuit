@@ -2,6 +2,7 @@
 
 #include "git-core/repository.h"
 #include "./gui/guit-commit-list-store.h"
+#include "gui/guit-new-commit-dialog.h"
 
 int main (int argc, char **argv)
 {
@@ -11,6 +12,8 @@ int main (int argc, char **argv)
     GtkWidget *window;
     GtkWidget *vbox;
     GtkWidget *label;
+    
+    GtkWidget *new_commit_btn;
     
     GtkWidget *treeview;
     GtkWidget *scrolled;
@@ -27,6 +30,12 @@ int main (int argc, char **argv)
     
     label = gtk_label_new ("Commit list store test");
     gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 0);
+    
+    new_commit_btn = gtk_button_new_with_mnemonic ("_New commit");
+    g_signal_connect (new_commit_btn, "clicked",
+                      G_CALLBACK (guit_new_commit_dialog_new),
+                      NULL);
+    gtk_box_pack_start (GTK_BOX (vbox), new_commit_btn, FALSE, FALSE, 0);
     
     
     scrolled = gtk_scrolled_window_new (NULL, NULL);
