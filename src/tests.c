@@ -6,8 +6,9 @@
 
 int main (int argc, char **argv)
 {
-    gtk_init (NULL, NULL);
     gc_repository_init (".", "master");
+#ifdef GTK_TEST
+    gtk_init (NULL, NULL);
     
     GtkWidget *window;
     GtkWidget *vbox;
@@ -62,6 +63,7 @@ int main (int argc, char **argv)
     gtk_widget_show_all (window);
     
     gtk_main ();
+#endif
     gc_repository_free();
     return 0;
 }
