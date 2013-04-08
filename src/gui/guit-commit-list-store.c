@@ -55,6 +55,8 @@ guit_commit_list_store_new (void)
                             COMMIT_LIST_STORE_COMMIT_ID, short_commit_oid,
                             -1);
     }
+
+    g_list_foreach (commit_list, (GFunc) gc_commit_info_free, NULL);
     g_list_free (commit_list);
     
     return GTK_TREE_MODEL (store);

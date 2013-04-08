@@ -60,11 +60,11 @@ commit_info *gc_commit_info_new (git_commit *commit)
 void gc_commit_info_free(commit_info *info)
 {
     g_free (info->oid);
-    git_signature_free((git_signature *) info->author);
-    
-    git_signature_free((git_signature *) info->committer);
 
     git_commit_free ((git_commit *) info->ref_commit);
+
+    info->author = NULL;
+    info->committer = NULL;
    
     free(info);
     info = NULL;
