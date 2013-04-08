@@ -28,7 +28,7 @@ guit_commit_list_store_new (void)
         commit_info *info = (commit_info *) it->data;
         gchar   date[16];
         gchar   short_commit_oid[8];
-        gchar   author[64];
+        gchar   author[128];
         
         date[15] = '\0';
         time_t t = info->ctime;
@@ -42,7 +42,7 @@ guit_commit_list_store_new (void)
                  lt->tm_mon + 1,        // month
                  lt->tm_year + 1900);   // year
                  
-        author[63] = '\0';
+        author[127] = '\0';
         sprintf (author, "%s <%s>",
                  info->author->name,
                  info->author->email);

@@ -1,5 +1,6 @@
 FILES=src/git-core/git-core.c \
       src/git-core/repository.c \
+      src/git-core/test.c \
       src/gui/guit-commit-list-store.c \
       src/gui/guit-new-commit-dialog.c \
       src/tests.c

@@ -112,35 +112,49 @@ GList *gc_all_commits ()
     static GList *list = NULL;
 
     gchar *hex_oid;
+
     git_oid oid;
     git_commit *commit;
-    int error = 0;
+    git_revwalk *walker;
+    gint error = 0;
 
     hex_oid_from_file (&hex_oid);
 
     git_oid_fromstr (&oid, hex_oid);
         
-    git_commit_lookup ( &commit,
-                        gc_repository->current,
-                        &oid);
+    git_revwalk_new (&walker, gc_repository->current);
+    git_revwalk_sorting (walker, GIT_SORT_TOPOLOGICAL);
+    git_revwalk_push (walker, &oid);
 
-    while (commit != NULL && error == 0)
+    while ((git_revwalk_next(&oid, walker)) == 0)
     {
-        commit_info *info;
-        info = gc_commit_info_new (commit);
-
+        error = git_commit_lookup (&commit, gc_repository->current, &oid);
+        
+        if (error != 0)
+            goto lookup_error;
+        
+        commit_info *info = gc_commit_info_new (commit);
+        
         list = g_list_append (list, info);
-        /* Get the next commit */
-        error = git_commit_parent (&commit,
-                                   commit,
-                                  0);
+/*
+        git_commit_free (commit);
+        commit = NULL;*/
     }
 
-    git_commit_free (commit);
-
+    git_revwalk_free (walker);
     list = g_list_first (list);
 
     return list;
+
+lookup_error:
+    git_revwalk_free (walker);
+    if (commit != NULL)
+    {
+        git_commit_free (commit);
+        commit = NULL;
+    }
+    g_list_free (list);
+    return NULL;
 }
 
 void
