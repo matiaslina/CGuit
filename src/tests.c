@@ -1,14 +1,15 @@
 #include <gtk/gtk.h>
 
 #include "git-core/repository.h"
+#include "git-core/test.h"
 #include "./gui/guit-commit-list-store.h"
 #include "gui/guit-new-commit-dialog.h"
 
 int main (int argc, char **argv)
 {
     gc_repository_init (".", "master");
-
-
+    revwalk_test();
+/*
     gtk_init (NULL, NULL);
     
     GtkWidget *window;
@@ -64,6 +65,7 @@ int main (int argc, char **argv)
     gtk_widget_show_all (window);
     
     gtk_main ();
+  */
     gc_repository_free();
     return 0;
 }
