@@ -21,7 +21,12 @@ void gc_repository_init (char *path,
 
 void gc_repository_free (void)
 {
-    git_repository_free (gc_repository->current);
-    g_free (gc_repository);
-    gc_repository = NULL;
+    if (gc_repository != NULL)
+    {
+        git_repository_free (gc_repository->current);
+        g_free (gc_repository);
+        gc_repository = NULL;
+    }
+    else
+        g_warning ("Cannot free gc_repository: The repository is NULL");
 }
