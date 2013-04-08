@@ -18,6 +18,7 @@ typedef struct {
     const char              *message;
     time_t                  ctime;
     unsigned int            parent_count;
+    git_commit              *ref_commit;
 } commit_info;
 
 typedef struct {

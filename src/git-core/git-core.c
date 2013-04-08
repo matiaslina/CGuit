@@ -38,7 +38,7 @@ void hex_oid_from_file (char **uid)
 commit_info *gc_commit_info_new (git_commit *commit)
 {
     commit_info *info;
-    if((info = calloc(5,sizeof *info)) != NULL)
+    if((info = calloc(6,sizeof *info)) != NULL)
     {
         /* Initialize the oid */
         info->oid = malloc ( 41 * sizeof (char));
@@ -50,8 +50,8 @@ commit_info *gc_commit_info_new (git_commit *commit)
         info->author = git_commit_author (commit);
         info->committer = git_commit_committer (commit);
         info->ctime = git_commit_time (commit);
-
         info->parent_count = git_commit_parentcount (commit);
+        info->ref_commit = commit;
     }
 
     return info;
@@ -63,6 +63,8 @@ void gc_commit_info_free(commit_info *info)
     git_signature_free((git_signature *) info->author);
     
     git_signature_free((git_signature *) info->committer);
+
+    git_commit_free ((git_commit *) info->ref_commit);
    
     free(info);
     info = NULL;
@@ -136,9 +138,6 @@ GList *gc_all_commits ()
         commit_info *info = gc_commit_info_new (commit);
         
         list = g_list_append (list, info);
-/*
-        git_commit_free (commit);
-        commit = NULL;*/
     }
 
     git_revwalk_free (walker);
@@ -148,6 +147,8 @@ GList *gc_all_commits ()
 
 lookup_error:
     git_revwalk_free (walker);
+
+    g_list_foreach (list, (GFunc) gc_commit_info_free, NULL);
     if (commit != NULL)
     {
         git_commit_free (commit);
