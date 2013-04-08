@@ -28,6 +28,7 @@ guit_commit_list_store_new (void)
         commit_info *info = (commit_info *) it->data;
         gchar   date[16];
         gchar   short_commit_oid[8];
+        gchar   author[64];
         
         date[15] = '\0';
         time_t t = info->ctime;
@@ -40,12 +41,17 @@ guit_commit_list_store_new (void)
                  lt->tm_mday,           // day
                  lt->tm_mon + 1,        // month
                  lt->tm_year + 1900);   // year
+                 
+        author[63] = '\0';
+        sprintf (author, "%s <%s>",
+                 info->author->name,
+                 info->author->email);
         
         gtk_list_store_append (store, &iter);
         gtk_list_store_set (store, &iter,
                             COMMIT_LIST_STORE_MESSAGE, info->message,
                             COMMIT_LIST_STORE_DATE, date,
-                            COMMIT_LIST_STORE_AUTHOR, info->author->name,
+                            COMMIT_LIST_STORE_AUTHOR, author,
                             COMMIT_LIST_STORE_COMMIT_ID, short_commit_oid,
                             -1);
     }
