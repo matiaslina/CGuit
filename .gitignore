@@ -6,8 +6,10 @@ config.h
 
 # Executables
 guit
-test
+tests
 
 *.cache
 
-tests
+# Images (for now)
+*.svg
+*.png
