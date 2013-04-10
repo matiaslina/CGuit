@@ -4,7 +4,6 @@
 #include <gtk/gtk.h>
 
 enum {
-    
     COMMIT_LIST_STORE_MESSAGE,
     COMMIT_LIST_STORE_DATE,
     COMMIT_LIST_STORE_AUTHOR,
@@ -12,8 +11,20 @@ enum {
     COMMIT_LIST_STORE_NUM_COLUMNS
 };
 
-void guit_commit_list_store_add_columns (GtkTreeView *treeview);
+struct _column_info {
+    gchar   *message;
+    gchar   author[32];
+    gchar   date[16];
+    gchar   oid[8];
+};
+
+typedef struct _column_info column_info;
+
 
 GtkTreeModel *guit_commit_list_store_new (void);
+
+void guit_commit_list_store_append (column_info *info, GtkListStore *store, GtkTreeIter **iter);
+
+void guit_commit_list_store_add_columns (GtkTreeView *treeview);
 
 #endif

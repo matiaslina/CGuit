@@ -1,15 +1,15 @@
 #include <gtk/gtk.h>
 
-#include "git-core/repository.h"
+#include "git-core/common.h"
 #include "git-core/test.h"
 #include "./gui/guit-commit-list-store.h"
 #include "gui/guit-new-commit-dialog.h"
 
 int main (int argc, char **argv)
 {
-    gc_repository_init (".", "master");
+    gc_git_data_init (".");
     revwalk_test();
-/*
+
     gtk_init (NULL, NULL);
     
     GtkWidget *window;
@@ -47,25 +47,27 @@ int main (int argc, char **argv)
     gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolled),
                                     GTK_POLICY_AUTOMATIC,
                                     GTK_POLICY_AUTOMATIC);
-    gtk_box_pack_start (GTK_BOX (vbox), scrolled, TRUE, TRUE, 0);
-    
+    //printf ("a\n");
     model = guit_commit_list_store_new ();
     
     treeview = gtk_tree_view_new_with_model (model);
-    gtk_tree_view_set_rules_hint (GTK_TREE_VIEW (treeview), TRUE);
-    
     g_object_unref (model);
+
+    gtk_tree_view_set_rules_hint (GTK_TREE_VIEW (treeview), TRUE);
+
+    guit_commit_list_store_add_columns (GTK_TREE_VIEW (treeview));
+    
+    
+    
+    
+    gtk_window_set_default_size (GTK_WINDOW (window), 280, 250);
+    gtk_box_pack_start (GTK_BOX (vbox), scrolled, TRUE, TRUE, 0);
     
     gtk_container_add (GTK_CONTAINER (scrolled), treeview);
     
-    guit_commit_list_store_add_columns (GTK_TREE_VIEW (treeview));
-    
-    gtk_window_set_default_size (GTK_WINDOW (window), 280, 250);
-    
     gtk_widget_show_all (window);
-    
     gtk_main ();
-  */
-    gc_repository_free();
+
+    gc_git_data_free ();
     return 0;
 }

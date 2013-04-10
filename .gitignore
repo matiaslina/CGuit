@@ -9,3 +9,5 @@ guit
 test
 
 *.cache
+
+tests

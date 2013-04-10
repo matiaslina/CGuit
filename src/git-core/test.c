@@ -1,5 +1,5 @@
 #include <git2.h>
-#include "repository.h"
+#include "common.h"
 #include "git-core.h"
 
 void 
@@ -8,7 +8,7 @@ revwalk_test (void)
     gint error;
     git_reference *reference;
 
-    git_repository_head (&reference, gc_repository->current);
+    git_repository_head (&reference, git->repository);
     
     const gchar *name = git_reference_name ((const git_reference *) reference);
 
