@@ -66,11 +66,7 @@ guit_commit_list_store_new (void)
     GtkListStore    *store;
     GtkTreeIter     iter;
 
-    store = gtk_list_store_new (COMMIT_LIST_STORE_NUM_COLUMNS,
-                                G_TYPE_STRING,
-                                G_TYPE_STRING,
-                                G_TYPE_STRING,
-                                G_TYPE_STRING);
+    store = GTK_LIST_STORE (guit_commit_list_store_empty ());
 
     git_revwalk     *walk;
     gint            error = 0;
@@ -173,4 +169,17 @@ guit_commit_list_store_add_columns (GtkTreeView *treeview)
                                                        COMMIT_LIST_STORE_COMMIT_ID,
                                                        NULL);
     gtk_tree_view_append_column (treeview, column);
+}
+
+GtkTreeModel *guit_commit_list_store_empty (void)
+{
+    GtkListStore    *store;
+
+    store = gtk_list_store_new (COMMIT_LIST_STORE_NUM_COLUMNS,
+                                G_TYPE_STRING,
+                                G_TYPE_STRING,
+                                G_TYPE_STRING,
+                                G_TYPE_STRING);
+    
+    return GTK_TREE_MODEL (store);
 }

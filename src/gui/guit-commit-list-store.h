@@ -27,4 +27,6 @@ void guit_commit_list_store_append (column_info *info, GtkListStore *store);
 
 void guit_commit_list_store_add_columns (GtkTreeView *treeview);
 
+GtkTreeModel *guit_commit_list_store_empty (void);
+
 #endif
