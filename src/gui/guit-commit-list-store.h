@@ -23,7 +23,7 @@ typedef struct _column_info column_info;
 
 GtkTreeModel *guit_commit_list_store_new (void);
 
-void guit_commit_list_store_append (column_info *info, GtkListStore *store, GtkTreeIter **iter);
+void guit_commit_list_store_append (column_info *info, GtkListStore *store);
 
 void guit_commit_list_store_add_columns (GtkTreeView *treeview);
 

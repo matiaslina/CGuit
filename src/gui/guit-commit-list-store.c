@@ -95,6 +95,8 @@ guit_commit_list_store_new (void)
         
         info = column_info_new_from_commit (commit);
 
+        guit_commit_list_store_append (info, store);
+#if 0
         gtk_list_store_append (store, &iter);
         gtk_list_store_set (store, &iter,
                             COMMIT_LIST_STORE_MESSAGE, info->message,
@@ -102,7 +104,7 @@ guit_commit_list_store_new (void)
                             COMMIT_LIST_STORE_AUTHOR, info->author,
                             COMMIT_LIST_STORE_COMMIT_ID, info->oid,
                             -1);
-
+#endif
         free (info);
         git_commit_free (commit);
     }
@@ -113,12 +115,15 @@ guit_commit_list_store_new (void)
 }
 
 void 
-guit_commit_list_store_append (column_info     *info,
-                               GtkListStore    *store,
-                               GtkTreeIter     **iter)
+guit_commit_list_store_append (column_info      *info,
+                               GtkListStore     *store)
 {
-    gtk_list_store_append (store, *iter);
-    gtk_list_store_set (store, *iter,
+    GtkTreeIter iter;
+
+    gtk_tree_model_get_iter_first (GTK_TREE_MODEL (store), &iter);
+
+    gtk_list_store_append (store, &iter);
+    gtk_list_store_set (store, &iter,
                         COMMIT_LIST_STORE_MESSAGE, info->message,
                         COMMIT_LIST_STORE_DATE, info->date,
                         COMMIT_LIST_STORE_AUTHOR, info->author,
