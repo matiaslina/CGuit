@@ -1,6 +1,4 @@
 #include <gtk/gtk.h>
-#include "../git-core/repository.h"
-#include "../git-core/git-core.h"
 
 #if     0
 static gint

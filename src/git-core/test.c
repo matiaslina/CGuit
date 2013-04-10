@@ -1,6 +1,6 @@
 #include <git2.h>
+#include <stdio.h>
 #include "common.h"
-#include "git-core.h"
 
 void 
 revwalk_test (void)

@@ -21,6 +21,17 @@ column_info_new_from_commit (git_commit *commit)
         gchar oid_str[41];
         git_signature *signature;
 
+        /* Message */
+        //info->message = (gchar *) git_commit_message (commit);
+        info->message = "Prueba :D";
+
+        /* Signature of the commit, name and email from the author. */
+        info->author[31] = '\0';
+        signature = (git_signature *)git_commit_author (commit);
+        
+        sprintf (info->author, "%s<%s>",
+                 signature->name,
+                 signature->email);
 
         /* get the time in the format dd/mm/yyyy 
          * (sort of) */
@@ -40,17 +51,7 @@ column_info_new_from_commit (git_commit *commit)
         git_oid_fmt (oid_str, tmp_oid);
         strncpy (info->oid, oid_str, 7);
         
-        /* Signature of the commit, name and email from the author. */
-        info->author[31] = '\0';
-        signature = (git_signature *)git_commit_author (commit);
-        
-        sprintf (info->author, "%s<%s>",
-                 signature->name,
-                 signature->email);
 
-        /* Message */
-        //info->message = (gchar *) git_commit_message (commit);
-        info->message = "Prueba :D";
         //git_signature_free (signature);
     }
     else
