@@ -33,7 +33,7 @@ int main (int argc, char **argv)
     label = gtk_label_new ("Commit list store test");
     gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 0);
     
-    new_commit_btn = gtk_button_new_with_mnemonic ("_New commit");
+    new_commit_btn = gtk_button_new_with_mnemonic ("_Clone Repository");
     g_signal_connect (new_commit_btn, "clicked",
                       G_CALLBACK (guit_clone_dialog_new),
                       NULL);
@@ -59,7 +59,7 @@ int main (int argc, char **argv)
     
     
     
-    gtk_window_set_default_size (GTK_WINDOW (window), 280, 250);
+    gtk_window_set_default_size (GTK_WINDOW (window), 800, 280);
     gtk_box_pack_start (GTK_BOX (vbox), scrolled, TRUE, TRUE, 0);
     
     gtk_container_add (GTK_CONTAINER (scrolled), treeview);
