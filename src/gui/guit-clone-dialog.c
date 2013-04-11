@@ -88,7 +88,6 @@ create_clone_dialog ()
     gtk_box_pack_start (GTK_BOX (hbox_path), path, TRUE, TRUE, 0);
     gtk_box_pack_start (GTK_BOX (hbox_path), get_path_dialog, FALSE, FALSE,0);
 
-
     gtk_box_pack_start (GTK_BOX (vbox), path_label, FALSE, FALSE, 0);
     gtk_box_pack_start (GTK_BOX (vbox), hbox_path, FALSE, FALSE, 0);
 
@@ -103,7 +102,8 @@ create_clone_dialog ()
             strcmp (gtk_entry_get_text (GTK_ENTRY (path)), ""))
         {
             // FIXME: Should use threads at this point :/
-            gc_clone_repository (gtk_entry_get_text (GTK_ENTRY (url)), gtk_entry_get_text (GTK_ENTRY (path)));
+            gc_clone_repository (gtk_entry_get_text (GTK_ENTRY (url)), 
+                                 gtk_entry_get_text (GTK_ENTRY (path)));
         }
     }
     

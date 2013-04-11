@@ -13,31 +13,37 @@
 /* This function will not remain here.. it's just for debug */
 static void print_progress (const progress_data *pd)
 {
+    gchar str_formatted[128]; // should be enought
+    str_formatted[127] = '\0';
+
     if (!pd->path)
     {
         gint network_percent = ( 100 * pd->fetch_progress.received_objects) / pd->fetch_progress.total_objects;
         gint index_percent = (100 * pd->fetch_progress.indexed_objects) / pd->fetch_progress.total_objects;
         gint kbytes = pd->fetch_progress.received_bytes / 1024;
 
-        printf (FETCH_FORMAT, 
-                network_percent,
-                kbytes,
-                pd->fetch_progress.received_objects,
-                pd->fetch_progress.total_objects,
-                index_percent,
-                pd->fetch_progress.indexed_objects,
-                pd->fetch_progress.total_objects);
+        sprintf (str_formatted,
+                 FETCH_FORMAT, 
+                 network_percent,
+                 kbytes,
+                 pd->fetch_progress.received_objects,
+                 pd->fetch_progress.total_objects,
+                 index_percent,
+                 pd->fetch_progress.indexed_objects,
+                 pd->fetch_progress.total_objects);
+
     }
     else
     {
         gint checkout_percent = pd->total_steps > 0
                             ? (100 * pd->completed_steps) / pd->total_steps
                             : 0.f;
-        printf (CHECKOUT_FORMAT,
-                checkout_percent,
-                pd->completed_steps,
-                pd->total_steps,
-                pd->path);
+        sprintf (str_formatted,
+                 CHECKOUT_FORMAT,
+                 checkout_percent,
+                 pd->completed_steps,
+                 pd->total_steps,
+                 pd->path);
 
     }
 }
@@ -82,35 +88,6 @@ static gint acquire_credentials (git_cred **out,
     return git_cred_userpass_plaintext_new (out, username, password);
 }
 
-void
-clone_signals_init ()
-{
-    clone_signals[CLONE_SIGNAL_FETCH_DATA] = g_signal_new ("fetch-data",
-                                                           G_TYPE_OBJECT,
-                                                           G_SIGNAL_RUN_LAST,
-                                                           0,
-                                                           NULL,
-                                                           NULL,
-                                                           NULL,
-                                                           G_TYPE_NONE,
-                                                           0,
-                                                           NULL);
-
-    clone_signals[CLONE_SIGNAL_CHECKOUT_DATA] = g_signal_new ("checkout-data",
-                                                              G_TYPE_OBJECT,
-                                                              G_SIGNAL_RUN_LAST,
-                                                              0,
-                                                              NULL,
-                                                              NULL,
-                                                              NULL,
-                                                              G_TYPE_NONE,
-                                                              0,
-                                                              NULL);
-
-
-}
-
-
 gint gc_clone_repository (const gchar   *url,
                           const gchar   *path)
 {
@@ -120,9 +97,6 @@ gint gc_clone_repository (const gchar   *url,
 
     /* Initialization */
     progress_data pd = {{0}};
-    
-    /* Create some signals */
-    clone_signals_init ();
     
     git_repository *cloned_repo = NULL;
 
