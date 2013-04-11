@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <glib.h>
+#include <glib-object.h>
 
 #include "clone.h"
 #include "common.h"
@@ -81,6 +82,34 @@ static gint acquire_credentials (git_cred **out,
     return git_cred_userpass_plaintext_new (out, username, password);
 }
 
+void
+clone_signals_init ()
+{
+    clone_signals[CLONE_SIGNAL_FETCH_DATA] = g_signal_new ("fetch-data",
+                                                           G_TYPE_OBJECT,
+                                                           G_SIGNAL_RUN_LAST,
+                                                           0,
+                                                           NULL,
+                                                           NULL,
+                                                           NULL,
+                                                           G_TYPE_NONE,
+                                                           0,
+                                                           NULL);
+
+    clone_signals[CLONE_SIGNAL_CHECKOUT_DATA] = g_signal_new ("checkout-data",
+                                                              G_TYPE_OBJECT,
+                                                              G_SIGNAL_RUN_LAST,
+                                                              0,
+                                                              NULL,
+                                                              NULL,
+                                                              NULL,
+                                                              G_TYPE_NONE,
+                                                              0,
+                                                              NULL);
+
+
+}
+
 
 gint gc_clone_repository (const gchar   *url,
                           const gchar   *path)
@@ -91,6 +120,9 @@ gint gc_clone_repository (const gchar   *url,
 
     /* Initialization */
     progress_data pd = {{0}};
+    
+    /* Create some signals */
+    clone_signals_init ();
     
     git_repository *cloned_repo = NULL;
 
