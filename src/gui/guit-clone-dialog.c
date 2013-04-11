@@ -103,7 +103,8 @@ create_clone_dialog ()
         {
             // FIXME: Should use threads at this point :/
             gc_clone_repository (gtk_entry_get_text (GTK_ENTRY (url)), 
-                                 gtk_entry_get_text (GTK_ENTRY (path)));
+                                 gtk_entry_get_text (GTK_ENTRY (path)),
+                                 path_label);
         }
     }
     

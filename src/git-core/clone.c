@@ -43,6 +43,7 @@ static void print_progress (const progress_data *pd)
                  pd->completed_steps,
                  pd->total_steps,
                  pd->path);
+        gtk_label_set_text (GTK_LABEL (pd->info_widget), str_formatted);
 
     }
 }
@@ -88,7 +89,8 @@ static gint acquire_credentials (git_cred **out,
 }
 
 gint gc_clone_repository (const gchar   *url,
-                          const gchar   *path)
+                          const gchar   *path,
+                          GtkWidget     *widget)
 {
     /* Check that the url and the path aren't null */
     g_assert (path != NULL);
@@ -103,6 +105,7 @@ gint gc_clone_repository (const gchar   *url,
     git_checkout_opts checkout_opts = GIT_CHECKOUT_OPTS_INIT;
 
     gint error;
+    pd.info_widget = widget;
 
     /* Set up some options */
     checkout_opts.checkout_strategy = GIT_CHECKOUT_SAFE_CREATE;
