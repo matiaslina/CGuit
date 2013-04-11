@@ -6,30 +6,39 @@
 #include "clone.h"
 #include "common.h"
 
-#define DEBUG
+#define     FETCH_FORMAT     "net %3d%% (%4d kb, %5d/%5d) / idx %3d%% (%5d/%5d)\n"
+#define     CHECKOUT_FORMAT  "chk %3d%% %u %u , File -> %s\n"
 
-
+/* This function will not remain here.. it's just for debug */
 static void print_progress (const progress_data *pd)
 {
-    gint network_percent = ( 100 * pd->fetch_progress.received_objects) / pd->fetch_progress.total_objects;
-    gint index_percent = (100 * pd->fetch_progress.indexed_objects) / pd->fetch_progress.total_objects;
+    if (!pd->path)
+    {
+        gint network_percent = ( 100 * pd->fetch_progress.received_objects) / pd->fetch_progress.total_objects;
+        gint index_percent = (100 * pd->fetch_progress.indexed_objects) / pd->fetch_progress.total_objects;
+        gint kbytes = pd->fetch_progress.received_bytes / 1024;
 
-    gint checkout_percent = pd->total_steps > 0
-                        ? (100 * pd->completed_steps) / pd->total_steps
-                        : 0.f;
+        printf (FETCH_FORMAT, 
+                network_percent,
+                kbytes,
+                pd->fetch_progress.received_objects,
+                pd->fetch_progress.total_objects,
+                index_percent,
+                pd->fetch_progress.indexed_objects,
+                pd->fetch_progress.total_objects);
+    }
+    else
+    {
+        gint checkout_percent = pd->total_steps > 0
+                            ? (100 * pd->completed_steps) / pd->total_steps
+                            : 0.f;
+        printf (CHECKOUT_FORMAT,
+                checkout_percent,
+                pd->completed_steps,
+                pd->total_steps,
+                pd->path);
 
-    gint kbytes = pd->fetch_progress.received_bytes / 1024;
-
-#if DEBUG
-
-    printf("net %3d%% (%4d kb, %5d/%5d) / idx %3d%% (%5d/%5d) / chk %3d%% %u %u , Path -> %s\n",
-            network_percent, kbytes,
-            pd->fetch_progress.received_objects, pd->fetch_progress.total_objects,
-            index_percent, pd->fetch_progress.indexed_objects, pd->fetch_progress.total_objects,
-            checkout_percent,
-            pd->completed_steps, pd->total_steps,
-            pd->path);
-#endif
+    }
 }
 
 static gint fetch_progress (const git_transfer_progress *stats, void *payload)
