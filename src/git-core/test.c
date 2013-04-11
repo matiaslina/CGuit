@@ -1,42 +1,43 @@
 #include <git2.h>
 #include <stdio.h>
+#include <glib.h>
 #include "common.h"
 
 void 
 revwalk_test (void)
 {
-    gint error;
-    git_reference *reference;
+    unsigned int ecount;
+    int i;
+    git_index *index;
+    gchar out[41];
+    out[40] = '\0';
 
-    git_repository_head (&reference, git->repository);
-    
-    const gchar *name = git_reference_name ((const git_reference *) reference);
+    git_repository_index (&index, git->repository);
 
-    printf ("reference name -> %s\n", name);
+    git_index_read (index);
 
-    if (git_reference_has_log( reference))
-        printf ("tiene logs!\n");
-    if (git_reference_is_branch (reference))
+    ecount = git_index_entrycount (index);
+    if (!ecount)
+        printf ("Empty index\n");
+
+    for (i = 0; i < ecount; ++i)
     {
-        printf ("Es un branch!\n");
+        const git_index_entry *e = git_index_get_byindex (index, i);
+
+        git_oid_fmt (out, &e->oid);
+
+        printf("File Path: %s\n", e->path);
+        printf("    Stage: %d\n", git_index_entry_stage(e));
+        printf(" Blob SHA: %s\n", out);
+        printf("File Mode: %07o\n", e->mode);
+        printf("File Size: %d bytes\n", (int)e->file_size);
+        printf("Dev/Inode: %d/%d\n", (int)e->dev, (int)e->ino);
+        printf("  UID/GID: %d/%d\n", (int)e->uid, (int)e->gid);
+        printf("    ctime: %d\n", (int)e->ctime.seconds);
+        printf("    mtime: %d\n", (int)e->mtime.seconds);
+        printf("\n");
     }
-    if (git_reference_is_remote (reference))
-        printf (":o encima es remota!\n");
 
 
-    git_reflog *reflog;
-    git_reflog_read (&reflog, reference);
-    
-    size_t entry_count = git_reflog_entrycount (reflog);
-    gint i;
-    for (i = 0; i < (gint) entry_count ; i++)
-    {
-        const git_reflog_entry *entry = git_reflog_entry_byindex (reflog, i);
-        printf ("Git reflog message -> %s\n", git_reflog_entry_message (entry));
-    }
-    git_reflog_free (reflog);
-
-    git_reference_free (reference);
-
-
+    git_index_free (index);
 }
