@@ -11,6 +11,7 @@ enum {
     GC_REFERENCE_UNINIT,
 };
 
+
 typedef struct {
     git_repository  *repository;
     git_reference   *reference;
@@ -19,7 +20,8 @@ typedef struct {
 GitData *git;
 
 /**
- * Initialize the GitData struct initializing the repository and the reference (branch I guess)
+ * Initialize the GitData struct initializing 
+ * the repository and the reference (branch I guess)
  */
 gint gc_git_data_init (gchar *path);
 

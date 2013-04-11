@@ -1,6 +1,7 @@
 #include <gtk/gtk.h>
 #include <glib.h>
 #include <git2.h>
+#include <string.h>
 #include "../git-core/clone.h"
 #include "../git-core/common.h"
 
@@ -84,7 +85,7 @@ create_clone_dialog ()
         g_signal_connect (get_path_dialog, "clicked",
                           G_CALLBACK (set_path_from_dialog), path);
 
-    gtk_box_pack_start (GTK_BOX (hbox_path), path, FALSE, FALSE,0);
+    gtk_box_pack_start (GTK_BOX (hbox_path), path, TRUE, TRUE, 0);
     gtk_box_pack_start (GTK_BOX (hbox_path), get_path_dialog, FALSE, FALSE,0);
 
 
@@ -95,11 +96,15 @@ create_clone_dialog ()
 
     response = gtk_dialog_run (GTK_DIALOG (dialog));
 
-    if (response == GTK_RESPONSE_OK)
+    if (response == GTK_RESPONSE_OK )
     {
-        const gchar *repo_url = gtk_entry_get_text (GTK_ENTRY (url));
-        const gchar *repo_path = gtk_entry_get_text (GTK_ENTRY (path));
-        gc_clone_repository (repo_url, repo_path);
+        // Check if the entries aren't empty
+        if (strcmp (gtk_entry_get_text (GTK_ENTRY (url)), "") &&
+            strcmp (gtk_entry_get_text (GTK_ENTRY (path)), ""))
+        {
+            // FIXME: Should use threads at this point :/
+            gc_clone_repository (gtk_entry_get_text (GTK_ENTRY (url)), gtk_entry_get_text (GTK_ENTRY (path)));
+        }
     }
     
     gtk_widget_destroy (dialog);
