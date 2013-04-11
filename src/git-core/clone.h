@@ -14,6 +14,6 @@ struct _progress_data
 
 typedef struct _progress_data progress_data;
 
-gint    gc_clone_repository (gchar *url, gchar *path);
+gint    gc_clone_repository (const gchar *url,const gchar *path);
 
 #endif

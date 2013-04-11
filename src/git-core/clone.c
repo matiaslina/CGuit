@@ -82,8 +82,8 @@ static gint acquire_credentials (git_cred **out,
 }
 
 
-gint gc_clone_repository (gchar             *url,
-                          gchar             *path)
+gint gc_clone_repository (const gchar   *url,
+                          const gchar   *path)
 {
     /* Check that the url and the path aren't null */
     g_assert (path != NULL);

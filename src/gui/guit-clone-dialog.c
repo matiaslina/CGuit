@@ -5,12 +5,6 @@
 #include "../git-core/common.h"
 
 void
-on_response (gint response)
-{
-    // Not implemented yet
-}
-
-void
 set_path_from_dialog (GtkButton *button,
                       gpointer  data)
 {
@@ -101,7 +95,12 @@ create_clone_dialog ()
 
     response = gtk_dialog_run (GTK_DIALOG (dialog));
 
-    on_response (response);
+    if (response == GTK_RESPONSE_OK)
+    {
+        const gchar *repo_url = gtk_entry_get_text (GTK_ENTRY (url));
+        const gchar *repo_path = gtk_entry_get_text (GTK_ENTRY (path));
+        gc_clone_repository (repo_url, repo_path);
+    }
     
     gtk_widget_destroy (dialog);
 }

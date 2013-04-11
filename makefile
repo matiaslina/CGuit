@@ -1,4 +1,5 @@
 FILES=src/git-core/common.c \
+	  src/git-core/clone.c \
       src/git-core/test.c \
       src/gui/guit-commit-list-store.c \
       src/gui/guit-clone-dialog.c \
