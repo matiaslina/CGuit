@@ -1,14 +1,13 @@
 #include <gtk/gtk.h>
 
 #include "git-core/common.h"
-#include "git-core/test.h"
 #include "./gui/guit-commit-list-store.h"
 #include "gui/guit-new-commit-dialog.h"
+#include "gui/guit-clone-dialog.h"
 
 int main (int argc, char **argv)
 {
     gc_git_data_init (".");
-    revwalk_test();
 
     gtk_init (NULL, NULL);
     
@@ -36,7 +35,7 @@ int main (int argc, char **argv)
     
     new_commit_btn = gtk_button_new_with_mnemonic ("_New commit");
     g_signal_connect (new_commit_btn, "clicked",
-                      G_CALLBACK (guit_new_commit_dialog_new),
+                      G_CALLBACK (guit_clone_dialog_new),
                       NULL);
     gtk_box_pack_start (GTK_BOX (vbox), new_commit_btn, FALSE, FALSE, 0);
     
