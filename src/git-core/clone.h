@@ -4,14 +4,6 @@
 #include <git2.h>
 #include <glib.h>
 
-enum {
-    CLONE_SIGNAL_FETCH_DATA,
-    CLONE_SIGNAL_CHECKOUT_DATA,
-    CLONE_SIGNAL_NUM,
-};
-
-static guint clone_signals[CLONE_SIGNAL_NUM] = {0};
-
 struct _progress_data 
 {
     git_transfer_progress fetch_progress;
