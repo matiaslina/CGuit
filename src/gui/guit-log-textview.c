@@ -28,6 +28,7 @@ guit_log_textview_init ()
     gtk_widget_modify_bg (view, GTK_STATE_NORMAL, &color);
 
     guit_log_textview_write_line (GTK_TEXT_VIEW (view), "Initialized log view...");
+    guit_log_textview_write_line (GTK_TEXT_VIEW (view), "This is just another line...");
 
     return view;
 }
@@ -37,22 +38,16 @@ guit_log_textview_write_line (GtkTextView *view,
                               gchar *line)
 {
     GtkTextBuffer *buffer;
-    GtkTextIter   *iter;
+    GtkTextIter   iter;
     gchar         new_line[1025];
     
     new_line[1024] = '\0';
     
-    sprintf (new_line, "\n%s", line);
+    sprintf (new_line, "%s\n", line);
     
     
 
     buffer = gtk_text_view_get_buffer (view);
-    if (buffer != NULL)
-    {
-        gtk_text_buffer_get_start_iter (buffer,
-                                      iter);
-        
-        gtk_text_buffer_insert (buffer, iter, 
-                                new_line, -1);
-    }
+    gtk_text_buffer_get_iter_at_offset (buffer, &iter, 0);
+    gtk_text_buffer_insert (buffer, &iter, new_line, -1);
 }
