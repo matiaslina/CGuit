@@ -14,7 +14,7 @@ guit_log_textview_init ()
     view = gtk_text_view_new ();
     buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (view));
 
-    gtk_text_buffer_set_text (buffer, ".", -1);
+    gtk_text_buffer_set_text (buffer, "", -1);
 
     /* Change the default font of the widget */
     font_desc = pango_font_description_from_string ("Monospace 10");
@@ -48,6 +48,7 @@ guit_log_textview_write_line (GtkTextView *view,
     
 
     buffer = gtk_text_view_get_buffer (view);
-    gtk_text_buffer_get_iter_at_offset (buffer, &iter, 0);
+    //gtk_text_buffer_get_iter_at_offset (buffer, &iter, 0);
+    gtk_text_buffer_get_end_iter(buffer, &iter);
     gtk_text_buffer_insert (buffer, &iter, new_line, -1);
 }
