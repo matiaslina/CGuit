@@ -2,7 +2,7 @@
 
 #include "git-core/common.h"
 #include "./gui/guit-commit-list-store.h"
-#include "gui/guit-log-textview.h"
+#include "gui/guit-logview.h"
 #include "gui/guit-clone-dialog.h"
 
 int main (int argc, char **argv)
@@ -17,7 +17,7 @@ int main (int argc, char **argv)
     
     GtkWidget *new_commit_btn;
     
-    GtkWidget *textview;
+    GtkWidget *logview;
     GtkWidget *scrolled;
     
     window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
@@ -46,14 +46,14 @@ int main (int argc, char **argv)
                                     GTK_POLICY_AUTOMATIC,
                                     GTK_POLICY_AUTOMATIC);
     
-    textview = guit_log_textview_init ();
-    
+    logview = guit_log_view_new ();
+    guit_log_view_write_line (GUIT_LOG_VIEW (logview), "Initialized");
     
     
     gtk_window_set_default_size (GTK_WINDOW (window), 800, 280);
     gtk_box_pack_start (GTK_BOX (vbox), scrolled, TRUE, TRUE, 0);
     
-    gtk_container_add (GTK_CONTAINER (scrolled), textview);
+    gtk_container_add (GTK_CONTAINER (scrolled), logview);
     
     gtk_widget_show_all (window);
     gtk_main ();
