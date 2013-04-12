@@ -2,7 +2,7 @@
 
 #include "git-core/common.h"
 #include "./gui/guit-commit-list-store.h"
-#include "gui/guit-new-commit-dialog.h"
+#include "gui/guit-log-textview.h"
 #include "gui/guit-clone-dialog.h"
 
 int main (int argc, char **argv)
@@ -17,9 +17,8 @@ int main (int argc, char **argv)
     
     GtkWidget *new_commit_btn;
     
-    GtkWidget *treeview;
+    GtkWidget *textview;
     GtkWidget *scrolled;
-    GtkTreeModel *model;
     
     window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
     
@@ -46,23 +45,15 @@ int main (int argc, char **argv)
     gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolled),
                                     GTK_POLICY_AUTOMATIC,
                                     GTK_POLICY_AUTOMATIC);
-    //printf ("a\n");
-    model = guit_commit_list_store_new ();
     
-    treeview = gtk_tree_view_new_with_model (model);
-    g_object_unref (model);
-
-    gtk_tree_view_set_rules_hint (GTK_TREE_VIEW (treeview), TRUE);
-
-    guit_commit_list_store_add_columns (GTK_TREE_VIEW (treeview));
-    
+    textview = guit_log_textview_init ();
     
     
     
     gtk_window_set_default_size (GTK_WINDOW (window), 800, 280);
     gtk_box_pack_start (GTK_BOX (vbox), scrolled, TRUE, TRUE, 0);
     
-    gtk_container_add (GTK_CONTAINER (scrolled), treeview);
+    gtk_container_add (GTK_CONTAINER (scrolled), textview);
     
     gtk_widget_show_all (window);
     gtk_main ();
