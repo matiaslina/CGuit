@@ -6,8 +6,8 @@
 #include "clone.h"
 #include "common.h"
 
-#define     FETCH_FORMAT     "net %3d%% (%4d kb, %5d/%5d) / idx %3d%% (%5d/%5d)\n"
-#define     CHECKOUT_FORMAT  "chk %3d%% %u %u , File -> %s\n"
+#define     FETCH_FORMAT     "net %3d%% (%4d kb, %5d/%5d) / idx %3d%% (%5d/%5d)"
+#define     CHECKOUT_FORMAT  "chk %3d%% %u %u , File -> %s"
 
 /* This function will not remain here.. it's just for debug */
 static void print_progress (const progress_data *pd)
@@ -30,7 +30,8 @@ static void print_progress (const progress_data *pd)
                  index_percent,
                  pd->fetch_progress.indexed_objects,
                  pd->fetch_progress.total_objects);
-
+        printf ("fetch progress %s\n", str_formatted);
+        guit_log_view_write_line (GUIT_LOG_VIEW (pd->info_widget),str_formatted);
     }
     else
     {
@@ -43,8 +44,8 @@ static void print_progress (const progress_data *pd)
                  pd->completed_steps,
                  pd->total_steps,
                  pd->path);
-        gtk_label_set_text (GTK_LABEL (pd->info_widget), str_formatted);
-
+        printf ("checkout progress %s\n", str_formatted);
+        guit_log_view_write_line (GUIT_LOG_VIEW (pd->info_widget), str_formatted);
     }
 }
 
@@ -123,6 +124,7 @@ gint gc_clone_repository (const gchar   *url,
     if (error != 0)
     {
         // Oops.. We have an error
+        printf ("DEBUG CLONE FUNCTION: %s,%s\n", url, path);
         const git_error *err = giterr_last();
         if (err) 
             printf ("ERROR %d: %s\n", err->klass, err->message);

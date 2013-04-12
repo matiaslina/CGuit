@@ -2,8 +2,17 @@
 #include <glib.h>
 #include <git2.h>
 #include <string.h>
+
+#include "guit-logview.h"
 #include "../git-core/clone.h"
 #include "../git-core/common.h"
+
+struct thread_data {
+    const gchar *repo_path;
+    const gchar *repo_url;
+    GtkWidget   *logview;
+};
+
 
 void
 set_path_from_dialog (GtkButton *button,
@@ -54,6 +63,10 @@ create_clone_dialog ()
     GtkWidget *path;
     GtkWidget *get_path_dialog;
 
+    GtkWidget *details_label;
+    GtkWidget *expander;
+    GtkWidget *logview;
+
     gint response;
 
     dialog = gtk_dialog_new_with_buttons ("Clone Repository",
@@ -91,6 +104,12 @@ create_clone_dialog ()
     gtk_box_pack_start (GTK_BOX (vbox), path_label, FALSE, FALSE, 0);
     gtk_box_pack_start (GTK_BOX (vbox), hbox_path, FALSE, FALSE, 0);
 
+    /* Expander section */
+    expander = gtk_expander_new ("Details");
+    gtk_box_pack_start (GTK_BOX(vbox), expander, FALSE, FALSE, 0);
+    logview = guit_log_view_new ();
+    gtk_container_add (GTK_CONTAINER (expander), logview);
+
     gtk_widget_show_all (vbox);
 
     response = gtk_dialog_run (GTK_DIALOG (dialog));
@@ -102,13 +121,17 @@ create_clone_dialog ()
             strcmp (gtk_entry_get_text (GTK_ENTRY (path)), ""))
         {
             // FIXME: Should use threads at this point :/
-            gc_clone_repository (gtk_entry_get_text (GTK_ENTRY (url)), 
-                                 gtk_entry_get_text (GTK_ENTRY (path)),
-                                 path_label);
+            struct thread_data data;
+            data.repo_path = gtk_entry_get_text (GTK_ENTRY (path));
+            data.repo_url = gtk_entry_get_text (GTK_ENTRY (url));
+            data.logview = logview;
+
+            gc_clone_repository(data.repo_url, data.repo_path, data.logview);
         }
     }
     
-    gtk_widget_destroy (dialog);
+    if (response == GTK_RESPONSE_CANCEL)
+        gtk_widget_destroy (dialog);
 }
 
 void

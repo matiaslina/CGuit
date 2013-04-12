@@ -8,8 +8,13 @@
 int main (int argc, char **argv)
 {
     gc_git_data_init (".");
+    
+    /* Initialize the threads */
+    g_thread_init (NULL);
+    gdk_threads_init();
 
-    gtk_init (NULL, NULL);
+    gtk_init (&argc, &argv);
+    
     
     GtkWidget *window;
     GtkWidget *vbox;
@@ -56,7 +61,10 @@ int main (int argc, char **argv)
     gtk_container_add (GTK_CONTAINER (scrolled), logview);
     
     gtk_widget_show_all (window);
+
+    gdk_threads_enter();
     gtk_main ();
+    gdk_threads_leave();
 
     gc_git_data_free ();
     return 0;
