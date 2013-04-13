@@ -1,10 +1,10 @@
 FILES=src/git-core/common.c \
 	  src/git-core/clone.c \
       src/git-core/test.c \
-      src/gui/guit-commit-list-store.c \
-      src/gui/guit-logview.c \
-      src/gui/guit-clone-dialog.c \
-      src/gui/guit-new-commit-dialog.c \
+      src/guit-commit-list-store.c \
+      src/guit-logview.c \
+      src/guit-clone-dialog.c \
+      src/guit-new-commit-dialog.c \
       src/tests.c
 FLAGS=`pkg-config --cflags --libs \
 	   glib-2.0 \

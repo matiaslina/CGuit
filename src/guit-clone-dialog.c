@@ -4,8 +4,8 @@
 #include <string.h>
 
 #include "guit-logview.h"
-#include "../git-core/clone.h"
-#include "../git-core/common.h"
+#include "git-core/clone.h"
+#include "git-core/common.h"
 
 struct thread_data {
     const gchar *repo_path;

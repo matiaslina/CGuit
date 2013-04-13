@@ -1,9 +1,9 @@
 #include <gtk/gtk.h>
 
 #include "git-core/common.h"
-#include "./gui/guit-commit-list-store.h"
-#include "gui/guit-logview.h"
-#include "gui/guit-clone-dialog.h"
+#include "guit-commit-list-store.h"
+#include "guit-logview.h"
+#include "guit-clone-dialog.h"
 
 int main (int argc, char **argv)
 {

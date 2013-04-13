@@ -4,7 +4,7 @@
 #include <string.h>
 #include <time.h>
 
-#include "../git-core/common.h"
+#include "git-core/common.h"
 #include "guit-commit-list-store.h"
 
 
