@@ -29,7 +29,7 @@ struct _GuitLogView
     GtkTextView view;
 };
 
-guint guit_log_view_get_type (void);
+GType guit_log_view_get_type (void);
 
 GtkWidget *guit_log_view_new (void);
 

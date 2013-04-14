@@ -1,8 +1,9 @@
 #ifndef _GIT_CORE_COMMON_H_
 #define _GIT_CORE_COMMON_H_
 
-#include <git2.h>
+#include "git2.h"
 #include <glib.h>
+#include "clone.h"
 
 /* Some errors */
 enum {

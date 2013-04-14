@@ -4,7 +4,7 @@
 #include <git2.h>
 #include <gtk/gtk.h>
 #include <glib.h>
-#include "../gui/guit-logview.h"
+#include "../guit-logview.h"
 
 struct _progress_data 
 {

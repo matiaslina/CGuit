@@ -41,8 +41,8 @@ static void print_progress (const progress_data *pd)
         sprintf (str_formatted,
                  CHECKOUT_FORMAT,
                  checkout_percent,
-                 pd->completed_steps,
-                 pd->total_steps,
+                 (guint) pd->completed_steps,
+                 (guint) pd->total_steps,
                  pd->path);
         printf ("checkout progress %s\n", str_formatted);
         guit_log_view_write_line (GUIT_LOG_VIEW (pd->info_widget), str_formatted);

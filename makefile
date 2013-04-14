@@ -1,40 +1,21 @@
+FILES=src/git-core/common.c \
+      src/git-core/clone.c \
+      src/git-core/test.c \
+      src/guit-commit-list-store.c \
+      src/guit-logview.c \
+      src/guit-clone-dialog.c \
+      src/guit-new-commit-dialog.c \
+      src/tests.c
+FLAGS=`pkg-config --cflags --libs \
+      glib-2.0 \
+      gtk+-3.0` \
+      -Llib -Iinclude -lgit2 
+WARN = -Wall -Wextra
 
-SRC_SOURCES=$(wildcard src/*.c)
-SRC_HEADERS=$(wildcard src/*.h)
-SRC_OBJECTS=$(SRC_SOURCES:.c=.o)
-GC_SOURCES=$(wildcard src/git-core/*.c)
-GC_HEADERS=$(wildcard src/git-core/*.h)
-GC_OBJECTS=$(GC_SOURCES:.c=.o)
+CC=clang
 
-SOURCES = $(SRC_SOURCES) $(GC_SOURCES)
-OBJECTS = $(SRC_OBJECTS) $(GC_OBJECTS)
-      
-TARGET=cguit
+all:
+	$(CC) $(FILES) -o tests $(FLAGS)
 
-LIBS=`pkg-config --cflags --libs \
-	   glib-2.0 \
-	   gthread-2.0 \
-	   libgit2 \
-	   gtk+-3.0`
-FLAGS = -Wall -Wextra -g
-
-#CC=clang
-CC=gcc
-all: $(TARGET)
-	
-$(TARGET): $(SOURCES)
-	$(CC) $(FLAGS) $(OBJECTS) -o $@ $(LIBS)
-
-
-$(SOURCES): print
-	$(CC) $(FLAGS) -c $@ $(LIBS)
-	
-objects: $(SOURCES)	
-
-clean:
-	rm -f $(TARGET) $(OBJECTS)
-	
-# Don't know why we need this on $(SOURCES)
-# objective =/
-print:
-	@
+with-warn:
+	$(CC) $(WARN) $(FILES) -o tests $(FLAGS) 

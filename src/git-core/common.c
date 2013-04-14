@@ -1,4 +1,4 @@
-#include <git2.h>
+#include "git2.h"
 #include <glib.h>
 #include "common.h"
 
