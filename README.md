@@ -13,7 +13,7 @@ Install requirements
 * libgee-dev
 * libssl-dev ( Required by libgit )
 
-now I'm using my own [libgit2](https://github.com/libgit2/libgit2) (installed it here), so if you want to test it you need to run `export LD_LIBRARY_PATH=/home/matias/workspace/cguit/lib:$LD_LIBRARY_PATH` before start the application.
+now I'm using my own [libgit2](https://github.com/libgit2/libgit2) (installed it here), so if you want to test it you need to run `export LD_LIBRARY_PATH=/go/to/the/program/lib:$LD_LIBRARY_PATH` before start the application.
 
 Licence
 -------
