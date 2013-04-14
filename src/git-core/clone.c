@@ -31,7 +31,8 @@ static void print_progress (const progress_data *pd)
                  pd->fetch_progress.indexed_objects,
                  pd->fetch_progress.total_objects);
         printf ("fetch progress %s\n", str_formatted);
-        guit_log_view_write_line (GUIT_LOG_VIEW (pd->info_widget),str_formatted);
+        if (pd->print_cb && pd->widget)
+            pd->print_cb(pd->widget,str_formatted);
     }
     else
     {
@@ -45,7 +46,8 @@ static void print_progress (const progress_data *pd)
                  (guint) pd->total_steps,
                  pd->path);
         printf ("checkout progress %s\n", str_formatted);
-        guit_log_view_write_line (GUIT_LOG_VIEW (pd->info_widget), str_formatted);
+        if (pd->print_cb && pd->widget)
+            pd->print_cb(pd->widget,str_formatted);
     }
 }
 
@@ -91,6 +93,7 @@ static gint acquire_credentials (git_cred **out,
 
 gint gc_clone_repository (const gchar   *url,
                           const gchar   *path,
+                          GCPrintFunc   func,
                           GtkWidget     *widget)
 {
     /* Check that the url and the path aren't null */
@@ -106,7 +109,8 @@ gint gc_clone_repository (const gchar   *url,
     git_checkout_opts checkout_opts = GIT_CHECKOUT_OPTS_INIT;
 
     gint error;
-    pd.info_widget = widget;
+    pd.print_cb = func;
+    pd.widget   = widget;
 
     /* Set up some options */
     checkout_opts.checkout_strategy = GIT_CHECKOUT_SAFE_CREATE;

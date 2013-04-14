@@ -13,6 +13,13 @@ struct thread_data {
     GtkWidget   *logview;
 };
 
+void write_log_view (GtkWidget *widget,
+                     gchar *str)
+{
+    guit_log_view_write_line(GUIT_LOG_VIEW (widget), str);
+}
+
+
 
 void
 set_path_from_dialog (GtkButton *button,
@@ -126,7 +133,7 @@ create_clone_dialog ()
             data.repo_url = gtk_entry_get_text (GTK_ENTRY (url));
             data.logview = logview;
 
-            gc_clone_repository(data.repo_url, data.repo_path, data.logview);
+            gc_clone_repository(data.repo_url, data.repo_path, write_log_view,data.logview);
         }
     }
     

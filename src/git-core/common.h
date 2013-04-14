@@ -3,7 +3,7 @@
 
 #include "git2.h"
 #include <glib.h>
-#include "clone.h"
+#include <gtk/gtk.h>
 
 /* Some errors */
 enum {
@@ -12,11 +12,16 @@ enum {
     GC_REFERENCE_UNINIT,
 };
 
-
 typedef struct {
     git_repository  *repository;
     git_reference   *reference;
 } GitData;
+
+/**
+ * Callback for printing some things
+ * I belive that only its needed a GuitLogView here.
+ */
+typedef void (*GCPrintFunc) (GtkWidget *widget, gchar *str);
 
 GitData *git;
 
