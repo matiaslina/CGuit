@@ -85,6 +85,9 @@ create_clone_dialog ()
                                           GTK_STOCK_CANCEL,
                                           GTK_RESPONSE_CANCEL,
                                           NULL);
+    gtk_window_set_default_size (GTK_WINDOW (dialog),
+                                 460,
+                                 -1);
 
     content_area = gtk_dialog_get_content_area (GTK_DIALOG (dialog));
     
