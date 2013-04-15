@@ -23,7 +23,7 @@ guit_log_view_init (GuitLogView *logview)
     gtk_text_buffer_set_text (buffer, "", -1);
 
     /* Change the default font of the widget */
-    font_desc = pango_font_description_from_string ("Monospace 10");
+    font_desc = pango_font_description_from_string ("Monospace 9");
     gtk_widget_modify_font (view, font_desc);
     pango_font_description_free (font_desc);
 

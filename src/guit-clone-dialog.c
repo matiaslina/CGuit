@@ -72,6 +72,7 @@ create_clone_dialog ()
 
     GtkWidget *details_label;
     GtkWidget *expander;
+    GtkWidget *scroll;
     GtkWidget *logview;
 
     gint response;
@@ -113,9 +114,17 @@ create_clone_dialog ()
 
     /* Expander section */
     expander = gtk_expander_new ("Details");
-    gtk_box_pack_start (GTK_BOX(vbox), expander, FALSE, FALSE, 0);
+    gtk_expander_set_resize_toplevel (GTK_EXPANDER (expander),
+                                      TRUE);
     logview = guit_log_view_new ();
-    gtk_container_add (GTK_CONTAINER (expander), logview);
+    scroll = gtk_scrolled_window_new (NULL, NULL);
+    gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW(scroll),
+                                    GTK_POLICY_NEVER,
+                                    GTK_POLICY_ALWAYS);
+    gtk_container_add (GTK_CONTAINER (scroll), logview);
+    
+    gtk_container_add (GTK_CONTAINER (expander), scroll);
+    gtk_box_pack_start (GTK_BOX(vbox), expander, FALSE, TRUE, 0);
 
     gtk_widget_show_all (vbox);
 
@@ -133,7 +142,10 @@ create_clone_dialog ()
             data.repo_url = gtk_entry_get_text (GTK_ENTRY (url));
             data.logview = logview;
 
-            gc_clone_repository(data.repo_url, data.repo_path, write_log_view,data.logview);
+            gc_clone_repository(data.repo_url,
+                                data.repo_path, 
+                                write_log_view,
+                                data.logview);
         }
     }
     
