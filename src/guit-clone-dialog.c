@@ -24,7 +24,6 @@ static void print_progress (const progress_data *pd);
 static gint fetch_progress (const git_transfer_progress *stats, void *payload);
 static void checkout_progress (const gchar  *path, size_t current, size_t total,void *payload);
 static gint acquire_credentials (git_cred **out, const gchar *url, const gchar *username_from_url, guint allowed_types,void *payload);
-void write_clone_info (GtkWidget *widget, gchar *str);
 gint clone_repository (const gchar *url, const gchar *path, GtkWidget *widget);
 
 /* This function will not remain here.. it's just for debug */
@@ -49,8 +48,6 @@ static void print_progress (const progress_data *pd)
                  pd->fetch_progress.indexed_objects,
                  pd->fetch_progress.total_objects);
         printf ("fetch progress %s\n", str_formatted);
-        if (pd->widget)
-            write_clone_info (pd->widget,str_formatted);
     }
     else
     {
@@ -64,9 +61,10 @@ static void print_progress (const progress_data *pd)
                  (guint) pd->total_steps,
                  pd->path);
         printf ("checkout progress %s\n", str_formatted);
-        if (pd->widget)
-            write_clone_info (pd->widget,str_formatted);
     }
+    
+    if (pd->widget)
+            guit_log_view_write_line(GUIT_LOG_VIEW (pd->widget), str_formatted);
 }
 
 static gint fetch_progress (const git_transfer_progress *stats, void *payload)
@@ -154,19 +152,11 @@ gint clone_repository (const gchar   *url,
     }
     else if (cloned_repo)
     {
-        write_clone_info (widget, "Finished!");
+        guit_log_view_write_line(GUIT_LOG_VIEW (widget), "Finished!");
         git_repository_free (cloned_repo);
     }
     return error;
 }
-
-void write_clone_info (GtkWidget *widget,
-                     gchar *str)
-{
-    guit_log_view_write_line(GUIT_LOG_VIEW (widget), str);
-}
-
-
 
 void
 set_path_from_dialog (GtkButton *button,
