@@ -153,8 +153,10 @@ gint clone_repository (const gchar   *url,
             
     }
     else if (cloned_repo)
+    {
+        write_clone_info (widget, "Finished!");
         git_repository_free (cloned_repo);
-
+    }
     return error;
 }
 
