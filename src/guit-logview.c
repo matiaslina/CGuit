@@ -2,11 +2,21 @@
 #include <glib.h>
 #include "guit-logview.h"
 
+/* Macros */
+static void guit_log_view_class_init (GuitLogViewClass *klass);
+static void guit_log_view_init (GuitLogView *logview);
+
+/**
+ * Class Constructor
+ */
 static void
 guit_log_view_class_init (GuitLogViewClass *klass)
 {
 }
 
+/**
+ * Instance Constructor
+ */
 static void
 guit_log_view_init (GuitLogView *logview)
 {
