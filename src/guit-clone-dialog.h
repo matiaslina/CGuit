@@ -3,6 +3,6 @@
 
 #include <gtk/gtk.h>
 
-void guit_clone_dialog_new (GtkButton *button, gpointer *data);
+void guit_clone_dialog_new ();
 
 #endif

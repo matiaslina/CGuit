@@ -6,6 +6,7 @@ FILES=src/git-core/common.c \
       src/guit-commit-list-store.c \
       src/guit-logview.c \
       src/guit-clone-dialog.c \
+      src/guit-toolbar.c \
       src/guit-new-commit-dialog.c \
       src/tests.c
 FLAGS=`pkg-config --cflags --libs \

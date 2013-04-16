@@ -293,8 +293,7 @@ create_clone_dialog ()
 }
 
 void
-guit_clone_dialog_new (GtkButton *button,
-                       gpointer  *data)
+guit_clone_dialog_new ()
 {
     create_clone_dialog();
 }

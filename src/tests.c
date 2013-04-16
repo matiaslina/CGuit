@@ -4,6 +4,7 @@
 #include "guit-commit-list-store.h"
 #include "guit-logview.h"
 #include "guit-clone-dialog.h"
+#include "guit-toolbar.h"
 
 int main (int argc, char **argv)
 {
@@ -16,7 +17,8 @@ int main (int argc, char **argv)
     
     GtkWidget *window;
     GtkWidget *vbox;
-    GtkWidget *label;
+    
+    GtkWidget *toolbar;
     
     GtkWidget *new_commit_btn;
     
@@ -25,15 +27,15 @@ int main (int argc, char **argv)
     
     window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
     
-    gtk_window_set_title (GTK_WINDOW (window), "CGuit");
+    gtk_window_set_title (GTK_WINDOW (window), "CGuit test");
     g_signal_connect (window,"destroy", G_CALLBACK (gtk_main_quit), NULL);
-    gtk_container_set_border_width (GTK_CONTAINER (window), 9);
+    gtk_container_set_border_width (GTK_CONTAINER (window), 0);
     
-    vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 8);
+    vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
     gtk_container_add (GTK_CONTAINER (window), vbox);
-    
-    label = gtk_label_new ("LogView test");
-    gtk_box_pack_start (GTK_BOX (vbox), label, FALSE, FALSE, 0);
+        
+    toolbar = guit_toolbar_new();
+    gtk_box_pack_start (GTK_BOX (vbox), toolbar, FALSE, FALSE, 3);
     
     new_commit_btn = gtk_button_new_with_mnemonic ("_Clone Repository");
     g_signal_connect (new_commit_btn, "clicked",
