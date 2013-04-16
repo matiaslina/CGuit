@@ -19,9 +19,7 @@ int main (int argc, char **argv)
     GtkWidget *vbox;
     
     GtkWidget *toolbar;
-    
-    GtkWidget *new_commit_btn;
-    
+        
     GtkWidget *logview;
     GtkWidget *scrolled;
     
@@ -36,14 +34,7 @@ int main (int argc, char **argv)
         
     toolbar = guit_toolbar_new();
     gtk_box_pack_start (GTK_BOX (vbox), toolbar, FALSE, FALSE, 3);
-    
-    new_commit_btn = gtk_button_new_with_mnemonic ("_Clone Repository");
-    g_signal_connect (new_commit_btn, "clicked",
-                      G_CALLBACK (guit_clone_dialog_new),
-                      NULL);
-    gtk_box_pack_start (GTK_BOX (vbox), new_commit_btn, FALSE, FALSE, 0);
-    
-    
+        
     scrolled = gtk_scrolled_window_new (NULL, NULL);
     gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (scrolled),
                                          GTK_SHADOW_ETCHED_IN);
