@@ -2,8 +2,6 @@
 *.status
 *.swp
 
-config.h
-
 # Executables
 guit
 tests
