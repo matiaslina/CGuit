@@ -2,7 +2,6 @@ CC=clang
 ARCH=i386
 
 FILES=src/git-core/common.c \
-      src/git-core/clone.c \
       src/git-core/test.c \
       src/guit-commit-list-store.c \
       src/guit-logview.c \
