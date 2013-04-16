@@ -1,3 +1,6 @@
+CC=clang
+ARCH=i386
+
 FILES=src/git-core/common.c \
       src/git-core/clone.c \
       src/git-core/test.c \
@@ -9,10 +12,8 @@ FILES=src/git-core/common.c \
 FLAGS=`pkg-config --cflags --libs \
       glib-2.0 \
       gtk+-3.0` \
-      -Llib -Iinclude -lgit2 
+      -L./lib/$(ARCH) -Iinclude -lgit2 
 WARN = -Wall -Wextra
-
-CC=clang
 
 all:
 	$(CC) $(FILES) -o tests $(FLAGS)
