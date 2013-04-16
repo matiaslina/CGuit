@@ -5,7 +5,7 @@ FILES=src/git-core/common.c \
       src/git-core/test.c \
       src/guit-commit-list-store.c \
       src/guit-logview.c \
-      src/guit-clone-dialog.c \
+      src/guit-clone-init-dialog.c \
       src/guit-toolbar.c \
       src/guit-new-commit-dialog.c \
       src/tests.c

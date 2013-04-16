@@ -3,7 +3,7 @@
 #include "git-core/common.h"
 #include "guit-commit-list-store.h"
 #include "guit-logview.h"
-#include "guit-clone-dialog.h"
+#include "guit-clone-init-dialog.h"
 #include "guit-toolbar.h"
 
 int main (int argc, char **argv)

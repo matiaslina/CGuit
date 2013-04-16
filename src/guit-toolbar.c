@@ -1,7 +1,7 @@
 #include <gtk/gtk.h>
 #include <glib.h>
 #include "guit-toolbar.h"
-#include "guit-clone-dialog.h"
+#include "guit-clone-init-dialog.h"
 
 static void guit_toolbar_class_init (GuitToolbarClass *klass);
 static void guit_toolbar_init (GuitToolbar *toolbar);

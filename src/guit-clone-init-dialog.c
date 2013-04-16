@@ -3,6 +3,7 @@
 #include <git2.h>
 #include <string.h>
 
+#include "guit-clone-init-dialog.h"
 #include "guit-logview.h"
 #include "git-core/common.h"
 
@@ -26,6 +27,107 @@ static gint fetch_progress (const git_transfer_progress *stats, void *payload);
 static void checkout_progress (const gchar  *path, size_t current, size_t total,void *payload);
 static gint acquire_credentials (git_cred **out, const gchar *url, const gchar *username_from_url, guint allowed_types,void *payload);
 gint clone_repository (const gchar *url, const gchar *path, GtkWidget *widget, GtkExpander *expander);
+static void guit_clone_init_dialog_class_init (GuitCloneInitDialogClass *klass);
+static void guit_clone_init_dialog_init (GuitCloneInitDialog *dialog);
+
+/* Callbacks */
+void set_path_from_dialog (GtkButton *button, gpointer  data);
+
+GType guit_clone_init_dialog_get_type ()
+{
+    static GType clone_init_dialog_type = 0;
+    if (! clone_init_dialog_type)
+    {
+        GTypeInfo clone_init_dialog_info = {
+            sizeof (GuitCloneInitDialogClass),
+            NULL,
+            NULL,
+            (GClassInitFunc) guit_clone_init_dialog_class_init,
+            NULL,
+            NULL,
+            sizeof (GuitCloneInitDialog),
+            0,
+            (GInstanceInitFunc) guit_clone_init_dialog_init
+        };
+        
+        clone_init_dialog_type = g_type_register_static (GTK_TYPE_DIALOG,
+                                                        "GuitCloneInitDialog",
+                                                        &clone_init_dialog_info,
+                                                        0);
+    }
+    
+    return clone_init_dialog_type;
+}
+
+static void guit_clone_init_dialog_class_init (GuitCloneInitDialogClass *klass) {};
+
+static void guit_clone_init_dialog_init (GuitCloneInitDialog *dialog)
+{
+    GtkWidget *content_area;
+    GtkWidget *vbox;
+
+    GtkWidget *url_label;
+    GtkWidget *url;
+
+    GtkWidget *path_label;
+
+    GtkWidget *hbox_path;
+    GtkWidget *path;
+    GtkWidget *get_path_dialog;
+
+    GtkWidget *details_label;
+    GtkWidget *expander;
+    GtkWidget *scroll;
+    GtkWidget *logview;
+
+    gint response;
+
+    gtk_window_set_default_size (GTK_WINDOW (dialog),
+                                 460,
+                                 -1);
+
+    content_area = gtk_dialog_get_content_area (GTK_DIALOG (dialog));
+    
+    vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 2);
+    gtk_container_set_border_width (GTK_CONTAINER (vbox), 2);
+    gtk_box_pack_start (GTK_BOX (content_area), vbox, FALSE, FALSE, 0);
+
+    url_label = gtk_label_new_with_mnemonic ("_Url");
+    url = gtk_entry_new ();
+
+    gtk_box_pack_start (GTK_BOX (vbox), url_label, FALSE, FALSE, 0);
+    gtk_box_pack_start (GTK_BOX (vbox), url, FALSE, FALSE, 0);
+
+    path_label = gtk_label_new_with_mnemonic ("_Path to save the repository");
+
+    hbox_path = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
+    path = gtk_entry_new ();
+    get_path_dialog = gtk_button_new_with_label ("...");
+        g_signal_connect (get_path_dialog, "clicked",
+                          G_CALLBACK (set_path_from_dialog), path);
+
+    gtk_box_pack_start (GTK_BOX (hbox_path), path, TRUE, TRUE, 0);
+    gtk_box_pack_start (GTK_BOX (hbox_path), get_path_dialog, FALSE, FALSE,0);
+
+    gtk_box_pack_start (GTK_BOX (vbox), path_label, FALSE, FALSE, 0);
+    gtk_box_pack_start (GTK_BOX (vbox), hbox_path, FALSE, FALSE, 0);
+
+    /* Expander section */
+    expander = gtk_expander_new ("Details");
+    gtk_expander_set_resize_toplevel (GTK_EXPANDER (expander),
+                                      TRUE);
+    logview = guit_log_view_new ();
+    scroll = gtk_scrolled_window_new (NULL, NULL);
+    gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW(scroll),
+                                    GTK_POLICY_NEVER,
+                                    GTK_POLICY_ALWAYS);
+    gtk_container_add (GTK_CONTAINER (scroll), logview);
+    
+    gtk_container_add (GTK_CONTAINER (expander), scroll);
+    gtk_box_pack_start (GTK_BOX(vbox), expander, FALSE, TRUE, 0);
+
+    gtk_widget_show_all (vbox);
+}
 
 /* This function will not remain here.. it's just for debug */
 static void print_progress (const progress_data *pd)
@@ -162,38 +264,6 @@ gint clone_repository (const gchar   *url,
 }
 
 void
-set_path_from_dialog (GtkButton *button,
-                      gpointer  data)
-{
-    GtkWidget *dir_choose_dialog;
-    GtkWidget *parent_window;
-    GtkEntry  *path_entry;
-
-    path_entry = GTK_ENTRY (data);
-    parent_window = gtk_widget_get_toplevel (GTK_WIDGET (path_entry));
-
-
-    dir_choose_dialog = gtk_file_chooser_dialog_new ("Open folder",
-                                                     GTK_WINDOW (parent_window),
-                                                     GTK_FILE_CHOOSER_ACTION_OPEN,
-                                                     GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
-                                                     GTK_STOCK_OPEN, GTK_RESPONSE_ACCEPT,
-                                                     NULL);
-    if (gtk_dialog_run (GTK_DIALOG (dir_choose_dialog)) == GTK_RESPONSE_ACCEPT)
-    {
-        gchar *dirname;
-
-        dirname = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (dir_choose_dialog));
-        gtk_entry_set_text (path_entry,
-                            (const gchar *) dirname);
-
-        g_free (dirname);
-    }
-
-    gtk_widget_destroy (dir_choose_dialog);
-}
-
-void
 create_clone_dialog ()
 {
 
@@ -296,4 +366,37 @@ void
 guit_clone_dialog_new ()
 {
     create_clone_dialog();
+}
+
+/* Callbacks */
+void
+set_path_from_dialog (GtkButton *button,
+                      gpointer  data)
+{
+    GtkWidget *dir_choose_dialog;
+    GtkWidget *parent_window;
+    GtkEntry  *path_entry;
+
+    path_entry = GTK_ENTRY (data);
+    parent_window = gtk_widget_get_toplevel (GTK_WIDGET (path_entry));
+
+
+    dir_choose_dialog = gtk_file_chooser_dialog_new ("Open folder",
+                                                     GTK_WINDOW (parent_window),
+                                                     GTK_FILE_CHOOSER_ACTION_OPEN,
+                                                     GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
+                                                     GTK_STOCK_OPEN, GTK_RESPONSE_ACCEPT,
+                                                     NULL);
+    if (gtk_dialog_run (GTK_DIALOG (dir_choose_dialog)) == GTK_RESPONSE_ACCEPT)
+    {
+        gchar *dirname;
+
+        dirname = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (dir_choose_dialog));
+        gtk_entry_set_text (path_entry,
+                            (const gchar *) dirname);
+
+        g_free (dirname);
+    }
+
+    gtk_widget_destroy (dir_choose_dialog);
 }
