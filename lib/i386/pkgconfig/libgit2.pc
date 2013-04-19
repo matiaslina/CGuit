@@ -1,5 +1,5 @@
-libdir=/home/matias/workspace/CGuit/lib
-includedir=/home/matias/workspace/CGuit/include
+libdir=/home/matias/workspace/cguit/lib
+includedir=/home/matias/workspace/cguit/include
 
 Name: libgit2
 Description: The git library, take 2

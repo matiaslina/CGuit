@@ -1,9 +1,0 @@
-libdir=/home/matias/workspace/cguit/lib
-includedir=/home/matias/workspace/cguit/include
-
-Name: libgit2
-Description: The git library, take 2
-Version: 0.17.0
-Requires: libcrypto
-Libs: -L${libdir} -lgit2 -lz -lcrypto
-Cflags: -I${includedir}
