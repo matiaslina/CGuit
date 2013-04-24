@@ -383,7 +383,7 @@ set_path_from_dialog (GtkButton *button,
 
     dir_choose_dialog = gtk_file_chooser_dialog_new ("Open folder",
                                                      GTK_WINDOW (parent_window),
-                                                     GTK_FILE_CHOOSER_ACTION_OPEN,
+                                                     GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER,
                                                      GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
                                                      GTK_STOCK_OPEN, GTK_RESPONSE_ACCEPT,
                                                      NULL);
